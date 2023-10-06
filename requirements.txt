@@ -1,9 +1,5 @@
-asgiref==3.6.0
-crispy-bootstrap4 @ git+https://github.com/django-crispy-forms/crispy-bootstrap4.git@5fa3aed498495b7d533e31762e3fb46623d96d6b
-Django==3.2.18
-django-crispy-forms==2.0
-gunicorn==20.1.0
-pytz==2022.7.1
-sqlparse==0.4.3
-typing-extensions==4.5.0
-whitenoise==6.4.0
+asgiref==3.7.2
+Django==4.2.6
+sqlparse==0.4.4
+typing_extensions==4.8.0
+tzdata==2023.3
