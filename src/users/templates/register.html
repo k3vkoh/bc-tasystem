@@ -9,7 +9,12 @@
     {% for field in form %}
         <div class="mb-3">
             <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-            {{ field|bootstrap }}
+            {% if field.field.widget.input_type == "checkbox" %}
+                {{ field }}
+            {% else %}
+                {{ field|bootstrap }}
+            {% endif %}
+
         </div>
     {% endfor %}
     <button type="submit" class="btn btn-primary">Login</button>
