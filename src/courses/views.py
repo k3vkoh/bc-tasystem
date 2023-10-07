@@ -4,7 +4,7 @@ from .models import Course
 from django.contrib.auth.mixins import LoginRequiredMixin
 from openpyxl import load_workbook
 
-class MyView(View):
+class UploadView(View):
     def get(self, request):
         return render(request, 'course_list/upload.html')
 
