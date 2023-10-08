@@ -48,7 +48,7 @@ class ApplicationListView(LoginRequiredMixin, ListView):
             context['applications'] = self.get_queryset().filter(student=self.request.user)
         else:
             context['title'] = 'Applications'
-            context['applications'] = self.get_queryset().filter(course__professor=self.request.user)
+            context['applications'] = Application.objects.filter(course__professor=self.request.user)
         
         return context
     

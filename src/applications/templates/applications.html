@@ -6,9 +6,15 @@
 {% for application in applications %}
     <div class="mb-3">
         <label for="{{ application.id_for_label }}" class="form-label">{{ application.label }}</label>
-        <p>Application to {{ application.course }}: <strong>{{ application.get_status }}</strong></p>
-        <a href="{% url 'applications:application-detail' application.id %}">View</a>
-        <p>Delete Application: <a href="{% url 'applications:application-delete' application.id %}">Delete</a></p>
+        <p><strong>Application to {{ application.course }}: {{ application.get_status }}</strong></p>
+        <p><a href="{% url 'applications:application-detail' application.id %}">View</a></p>
+        
+        {% if user.is_professor or user.is_superuser %}
+        <p><a href="#">Send Offer</a></p>
+        <p><a href="#">Reject Application</a></p>
+        {% else %}
+        <p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
+        {% endif %}
     </div>
 {% endfor %}
 

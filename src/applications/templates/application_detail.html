@@ -5,12 +5,16 @@
 <h2>Application to {{ application.course }}</h2>
 
 <p>Applicant: <strong>{{ application.student }}</strong></p>
+<p>Instructor: <strong>{{ application.course.professor }}</strong></p>
 <p>Application Status: <strong>{{ application.get_status }}</strong></p>
 <p>Additional Information: <strong>{{ application.additional_information }}</strong></p>
 <p><a href="{% url 'applications:application-list' %}">Back to Applications</a></p>
-<p><a href="{% url 'applications:application-delete' application.id %}">Delete Application</a></p>
+
 {% if user == course.professor or user.is_superuser %}
 <p><a href="#">Send Offer</a></p>
+<p><a href="#">Reject Application</a></p>
+{% else %}
+<p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
 {% endif %}
 
 {% endblock %}
