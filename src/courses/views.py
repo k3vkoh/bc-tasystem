@@ -24,8 +24,6 @@ class UploadView(View):
 				instructor_first_name = row[6].split(',')[1].strip()
 				instructor_last_name = row[6].split(',')[0].strip()
 
-				# Check if a user with the given instructor's first name, last name, and professor=True exists.
-				# If not, create one.
 				instructor, created = User.objects.get_or_create(
 					first_name=instructor_first_name,
 					last_name=instructor_last_name,
@@ -56,6 +54,8 @@ class UploadView(View):
 					professor=instructor
 				)
 				new_class.save()
+				instructor.courses.add(new_class)
+				instructor.save()
 
 			return render(request, 'success.html')
 		return render(request, 'upload.html')
@@ -64,7 +64,6 @@ class UploadView(View):
 		eagleid = randint(10000000, 99999999)
 		while User.objects.filter(eagleid=eagleid).exists():
 			eagleid = randint(10000000, 99999999)
-		print(eagleid)
 		return eagleid
 
 class ListView(LoginRequiredMixin, ListView):
