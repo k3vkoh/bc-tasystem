@@ -23,6 +23,8 @@ class Course(models.Model):
 	professor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
 	current_tas = models.ManyToManyField(CustomUser, related_name='current_tas', blank=True)
 
+	applications = models.ManyToManyField("applications.Application", blank=True, related_name='applications')
+
 
 	def __str__(self):
 		return self.course_title

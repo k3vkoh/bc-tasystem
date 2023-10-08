@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     # own apps
     "users",
     "main",
-    "courses"
+    "courses",
+    "applications",
 ]
 
 MIDDLEWARE = [
