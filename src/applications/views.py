@@ -69,8 +69,17 @@ class ApplicationDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         return context\
         
 
+class ApplicationDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Application
+    template_name = 'application_detail.html'
     
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user == self.get_object().student or self.request.user == self.get_object().course.professor
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['course'] = self.get_object().course
+        return context
 
         
 
