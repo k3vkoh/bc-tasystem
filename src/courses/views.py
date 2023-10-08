@@ -2,6 +2,7 @@ from django.views import View
 from django.shortcuts import render, redirect
 from .models import Course
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from openpyxl import load_workbook
 
 class UploadView(View):
@@ -37,3 +38,13 @@ class UploadView(View):
 			return render(request, 'success.html')
 		return render(request, 'upload.html')
 
+
+class ListView(LoginRequiredMixin, ListView):
+    model = Course
+    template_name = 'list.html'
+    ordering = ['course']
+    context_object_name = 'course_data'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
