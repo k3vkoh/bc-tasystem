@@ -21,13 +21,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     email = models.EmailField(unique=True)
-    eagleid = models.PositiveIntegerField(unique=True, default=0000000)
+    eagleid = models.PositiveIntegerField(default=0000000)
     professor = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
+
+    courses = models.ManyToManyField("courses.Course", blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     # own apps
     "users",
     "main",
-    "courses"
+    "courses",
+    "applications",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,4 @@ LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'home'
 
+LOGIN_URL = '/users/login'

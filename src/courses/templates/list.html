@@ -16,27 +16,27 @@
     </tr>
   </thead>
   <tbody class="table-hover">
-    {% for course in course_data %}
-    <tr>
-      <td>{{ course.course_title }}</td>
-      <td>{{ course.instructor_first_name}} {{ course.instructor_last_name}}</td>
-      <td>{{ course.course_type }}</td>
-      <td>{{ course.course }}</td>
-      <td>{{ course.section }}</td>
-      <td>{{ course.room_name }}</td>
-      <td>{{ course.timeslot }}</td>
-      <td>{{ course.num_tas }}</td>
-      {% if course.status == True%}
-        {% if user.is_staff %}
-          <td><strong style="color: green"> Open </strong></td>
+      {% for course in course_data %}
+      <tr>
+        <td>{{ course.course_title }}</td>
+        <td>{{ course.instructor_first_name}} {{ course.instructor_last_name}}</td>
+        <td>{{ course.class_type }}</td>
+        <td>{{ course.course }}</td>
+        <td>{{ course.section }}</td>
+        <td>{{ course.room_name }}</td>
+        <td>{{ course.timeslot }}</td>
+        <td>{{ course.current_tas.count }}/{{ course.num_tas }}</td>
+        {% if course.status == True%}
+          {% if user.is_staff or user.professor %}
+            <td><strong style="color: green"> Open </strong></td>
+          {% else %}
+            <td><a href="{% url 'applications:application-create' course.id %}">Apply</a></td>
+          {% endif %}
         {% else %}
-          <td><a href="#"> Apply </a></td>
-        {% endif %}
-      {% else %}
-        <td><strong style="color: red"> Closed </strong></td>
-      {% endif %} 
-    </tr>     
-    {% endfor %}
+          <td><strong style="color: red"> Closed </strong></td>
+        {% endif %} 
+      </tr>     
+      {% endfor %}
   </tbody>
 </table>
 {% endblock %}
