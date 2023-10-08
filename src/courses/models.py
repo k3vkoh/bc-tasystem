@@ -21,6 +21,8 @@ class Course(models.Model):
 	status = models.BooleanField(default=True)
 
 	professor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+	current_tas = models.ManyToManyField(CustomUser, related_name='current_tas', blank=True)
+
 
 	def __str__(self):
 		return self.course_title
