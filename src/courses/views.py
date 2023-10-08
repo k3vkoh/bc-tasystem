@@ -38,11 +38,13 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             last_name=instructor_last_name,
             defaults={
                 'professor': True,
-                'password': 'password',  # TODO: Make sure to change this
                 'email': f"{instructor_last_name.lower()[:4]}@bc.edu",  # TODO: Change this to a valid email
                 'eagleid': self.generate_eagleid()
             }
         )
+        if created:
+            instructor.set_password('password')
+            instructor.save()
         return instructor
 
     def create_course(self, row, instructor):
