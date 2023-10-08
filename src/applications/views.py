@@ -39,17 +39,20 @@ class ApplicationListView(LoginRequiredMixin, ListView):
     context_object_name = 'applications'
     
     def get_queryset(self):
-        return Application.objects.filter(student=self.request.user)
+        if self.request.user.is_superuser:
+            return Application.objects.all()
+        elif self.request.user.is_student():
+            return Application.objects.filter(student=self.request.user)
+        else:
+            return Application.objects.filter(course__professor=self.request.user)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['applications'] = self.get_queryset()
         if self.request.user.is_student():
             context['title'] = 'My Applications'
-            context['applications'] = self.get_queryset().filter(student=self.request.user)
         else:
             context['title'] = 'Applications'
-            context['applications'] = Application.objects.filter(course__professor=self.request.user)
-        
         return context
     
 class ApplicationDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
