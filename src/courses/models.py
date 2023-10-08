@@ -19,6 +19,7 @@ class Course(models.Model):
 	room_size = models.IntegerField()
 	num_tas = models.IntegerField()
 	description = models.CharField(max_length=350, null=True, blank=True)
+	status = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.course_title
