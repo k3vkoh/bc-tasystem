@@ -1,4 +1,3 @@
-from typing import Any
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -24,7 +23,7 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     def test_func(self):
         return self.request.user.is_student() or self.request.user.is_superuser
     
-    def get_context_data(self, **kwargs: Any):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course'] = self.get_object()
         return context

@@ -30,7 +30,7 @@
           {% if user.is_staff or user.professor %}
             <td><strong style="color: green"> Open </strong></td>
           {% else %}
-            <td><a href="#"> Apply </a></td>
+            <td><a href="{% url 'applications:application-create' course.id %}">Apply</a></td>
           {% endif %}
         {% else %}
           <td><strong style="color: red"> Closed </strong></td>
