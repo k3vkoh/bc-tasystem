@@ -19,20 +19,20 @@ class UploadView(View):
 				if row[0] == 'Term':
 					continue
 				new_class = Course(term=row[0], 
-										class_type=row[1], 
-										course=row[3], 
-										section=row[4], 
-										course_title=row[5], 
-										instructor_first_name=row[6].split(',')[1],
-										instructor_last_name=row[6].split(',')[0],
-										room_name=row[7],
-										author=request.user,
-										timeslot=row[8],
-										max_enroll=row[9],
-										room_size=row[10],
-										num_tas=int(row[9])//20,
-										description=row[12]
-									)
+									class_type=row[1], 
+									course=row[3], 
+									section=row[4], 
+									course_title=row[5], 
+									instructor_first_name=row[6].split(',')[1],
+									instructor_last_name=row[6].split(',')[0],
+									room_name=row[7],
+									author=request.user,
+									timeslot=row[8],
+									max_enroll=row[9],
+									room_size=row[10],
+									num_tas=int(row[9])//20,
+									description=row[12]
+								)
 				new_class.save()
 
 			return render(request, 'success.html')
