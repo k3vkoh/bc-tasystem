@@ -5,6 +5,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from .models import Application
 from courses.models import Course
 from .forms import ApplicationForm
+from django.urls import reverse
 
 class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Application
@@ -51,6 +52,22 @@ class ApplicationListView(LoginRequiredMixin, ListView):
         
         return context
     
+class ApplicationDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Application
+    template_name = 'application_confirm_delete.html'
+    success_message = "Your application has been deleted successfully!"
+    
+    def get_success_url(self):
+        return reverse('applications:application-list')
+    
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user == self.get_object().student
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['course'] = self.get_object().course
+        return context\
+        
 
     
     

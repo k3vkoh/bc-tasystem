@@ -2,6 +2,7 @@ from django.db import models
 from users.models import CustomUser as User
 from courses.models import Course
 from enum import Enum
+from django.urls import reverse
 
 class Status(Enum):
     '''
@@ -44,4 +45,3 @@ class Application(models.Model):
     def confirm(self):
         self.status = Status.CONFIRMED.value
         self.save()
-                                
