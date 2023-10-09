@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import UploadView, ListView, DetailView
+from .views import UploadView, ListView, CloseView
 
 urlpatterns = [
 	path('', ListView.as_view(), name='course-list'),
-	path('<int:pk>/', DetailView.as_view(), name='course-detail'),
-    path('upload/', UploadView.as_view(), name='upload-excel'),
+    path('manage/', UploadView.as_view(), name='manage-course'),
+    path('manage/archive/', CloseView.as_view(), name='archive-course'),
 ]

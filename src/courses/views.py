@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render, redirect
-from .models import Course
+from .models import Course, ArchivedCourse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from openpyxl import load_workbook
 from users.models import CustomUser as User
@@ -9,8 +9,6 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 
 class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
-
-    success_message = 'File Uploaded Successfully'
 
     def get(self, request):
         return render(request, 'upload.html')
@@ -21,7 +19,7 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             self.process_excel_file(excel_file)
         messages.success(self.request, 'Successfully Uploaded Excel File')
         return render(request, 'upload.html')
-    
+
     def process_excel_file(self, excel_file):
         workbook = load_workbook(excel_file)
         sheet = workbook.active
@@ -75,6 +73,41 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             eagleid = randint(10000000, 99999999)
         return eagleid
     
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+
+class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
+
+    def post(self, request):
+        self.archive_courses()
+        return redirect('manage-course') 
+
+    def archive_courses(self):
+        current_courses = Course.objects.all()
+        for course in current_courses:
+            archived_course = ArchivedCourse.objects.create(
+                term=course.term,
+                class_type=course.class_type,
+                course=course.course,
+                section=course.section,
+                course_title=course.course_title,
+                instructor_first_name=course.instructor_first_name,
+                instructor_last_name=course.instructor_last_name,
+                room_name=course.room_name,
+                timeslot=course.timeslot,
+                max_enroll=course.max_enroll,
+                room_size=course.room_size,
+                num_tas=course.num_tas,
+                description=course.description,
+                professor=course.professor,
+            )
+
+            archived_course.past_tas.set(course.current_tas.all())
+
+        Course.objects.all().delete()
+
+
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser
 
