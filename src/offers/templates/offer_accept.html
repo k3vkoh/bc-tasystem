@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load bootstrapify %}
+{% block content %} 
+
+<h2>Are you sure you want to accept this offer?</h2>
+<p>You can only TA for one course</p>
+
+<form method="post" class="form-group">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Yes</button>
+</form>
+
+<p><a href="{% url 'offers:offer-list' %}">Back to Offers</a></p>
+
+{% endblock %}
