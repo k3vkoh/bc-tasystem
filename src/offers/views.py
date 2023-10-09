@@ -30,6 +30,8 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return Application.objects.get(pk=self.kwargs.get('pk'))
     
     def test_func(self):
+        if self.get_object().get_status() != "PENDING":
+            return False
         return self.get_object().course.professor == self.request.user or self.request.user.is_superuser
     
     def get_context_data(self, **kwargs):

@@ -5,7 +5,7 @@ from enum import Enum
 from django.urls import reverse
 
 
-class Status(Enum):
+class ApplicationStatus(Enum):
     '''
     Enum for the status of an application
     PENDING - The application has been submitted but not yet reviewed
@@ -23,7 +23,7 @@ class Application(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=None)
 
     additional_information = models.TextField(max_length=500, blank=True)
-    status = models.IntegerField(choices=[(tag.value, tag.name) for tag in Status], default=Status.PENDING.value)
+    status = models.IntegerField(choices=[(tag.value, tag.name) for tag in ApplicationStatus], default=ApplicationStatus.PENDING.value)
 
     def __str__(self):
         return self.student + " - " + self.course
@@ -32,20 +32,20 @@ class Application(models.Model):
         return reverse('applications:application-detail', kwargs={'pk': self.pk})
     
     def get_status(self):
-        return Status(self.status).name
+        return ApplicationStatus(self.status).name
     
     def reset(self):
-        self.status = Status.PENDING.value
+        self.status = ApplicationStatus.PENDING.value
         self.save()
     
     def accept(self):
-        self.status = Status.ACCEPTED.value
+        self.status = ApplicationStatus.ACCEPTED.value
         self.save()
 
     def reject(self):
-        self.status = Status.REJECTED.value
+        self.status = ApplicationStatus.REJECTED.value
         self.save()
     
     def confirm(self):
-        self.status = Status.CONFIRMED.value
+        self.status = ApplicationStatus.CONFIRMED.value
         self.save()
