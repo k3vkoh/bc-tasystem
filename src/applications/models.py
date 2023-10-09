@@ -14,7 +14,7 @@ class Status(Enum):
     CONFIRMED - The application offer has been confirmed by the student
     '''
     PENDING = 1
-    APPROVED = 2
+    ACCEPTED = 2
     REJECTED = 3
     CONFIRMED = 4
 
@@ -39,7 +39,7 @@ class Application(models.Model):
         self.save()
     
     def accept(self):
-        self.status = Status.APPROVED.value
+        self.status = Status.ACCEPTED.value
         self.save()
 
     def reject(self):

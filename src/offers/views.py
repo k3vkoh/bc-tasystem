@@ -1,3 +1,5 @@
+from django.forms.forms import BaseForm
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -65,6 +67,9 @@ class OfferDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     success_message = "Your offer has been deleted successfully!"
     template_name = 'offer_confirm_delete.html'
 
+    def form_valid(self, form):
+        Offer.objects.get(pk=self.kwargs.get('pk')).application.reset()
+        return super().form_valid(form)
     
     def get_success_url(self):
         return reverse('offers:offer-list')
