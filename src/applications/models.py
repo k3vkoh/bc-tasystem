@@ -4,6 +4,7 @@ from courses.models import Course
 from enum import Enum
 from django.urls import reverse
 
+
 class Status(Enum):
     '''
     Enum for the status of an application
@@ -26,6 +27,9 @@ class Application(models.Model):
 
     def __str__(self):
         return self.student + " - " + self.course
+    
+    def get_absolute_url(self):
+        return reverse('applications:application-detail', kwargs={'pk': self.pk})
     
     def get_status(self):
         return Status(self.status).name

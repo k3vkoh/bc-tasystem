@@ -10,8 +10,6 @@
         <p><a href="{% url 'applications:application-detail' application.id %}">View</a></p>
         
         {% if user.is_professor or user.is_superuser %}
-        <p><a href="#">Send Offer</a></p>
-        <p><a href="#">Reject Application</a></p>
         {% else %}
         <p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
         {% endif %}
