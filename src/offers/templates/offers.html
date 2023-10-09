@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load bootstrapify %}
+{% block content %} 
+
+<h2>{{ title }}</h2>
+
+{% for offer in offers %}
+    <div class="mb-3">
+        <label for="{{ offer.id_for_label }}" class="form-label">{{ offer.label }}</label>
+        <p><strong>Offer to {{ offer.application.student }}</strong>: {{ offer.get_status }}</p>
+        {% if user.is_student %}
+        <p><a href="{% url 'offers:offer-detail' offer.id %}">View</a></p>
+        {% else %}
+        <p><a href="{% url 'offers:offer-delete' offer.id %}">Rescind Offer</a></p>
+        {% endif %}
+        
+    </div>
+{% endfor %}
+
+{% endblock %}
