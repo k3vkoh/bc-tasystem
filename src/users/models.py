@@ -42,8 +42,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.professor
     
     def is_student(self):
-        return not self.professor
+        return not self.professor 
     
+
+    # dawd
+    
+
 
 
     
