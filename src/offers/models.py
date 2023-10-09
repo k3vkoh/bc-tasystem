@@ -25,6 +25,9 @@ class Offer(models.Model):
         self.status = OfferStatus.ACCEPTED.value
         self.application.confirm()
         self.course.current_tas.add(self.recipient)
+        self.course.save()
+        self.recipient.course_working_for = self.course
+        self.recipient.save()
         self.save()
 
     def reject(self):

@@ -30,6 +30,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     courses = models.ManyToManyField("courses.Course", blank=True)
+    course_working_for = models.ForeignKey("courses.Course", on_delete=models.CASCADE, null=True, blank=True, related_name='course_working_for')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
