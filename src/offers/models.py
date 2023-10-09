@@ -2,9 +2,9 @@ from django.db import models
 from enum import Enum
 
 class OfferStatus(Enum):
-    PENDING = 0
-    ACCEPTED = 1
-    REJECTED = 2
+    PENDING = 1
+    ACCEPTED = 2
+    REJECTED = 3
 
 class Offer(models.Model):
     application = models.ForeignKey('applications.Application', on_delete=models.CASCADE, related_name='offer_application')
@@ -23,10 +23,13 @@ class Offer(models.Model):
 
     def accept(self):
         self.status = OfferStatus.ACCEPTED.value
+        self.application.confirm()
+        self.course.current_tas.add(self.recipient)
         self.save()
 
     def reject(self):
         self.status = OfferStatus.REJECTED.value
+        self.application.reject()
         self.save()
 
     def reset(self):

@@ -83,9 +83,16 @@ class OfferDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         context = super().get_context_data(**kwargs)
         return context
     
-class OfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Offer
-    template_name = 'offer_detail.html'
+    template_name = 'offer_accept.html'
+    success_message = "Your offer has been accepted successfully!"
+    fields = []
+
+    def form_valid(self, form):
+        self.object.accept()
+        return super().form_valid(form)
+
     
     def test_func(self):
         return self.get_object().recipient == self.request.user or self.request.user.is_superuser
@@ -94,5 +101,11 @@ class OfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['application'] = self.get_object().application
         return context
+    
+    def get_success_url(self):
+        return reverse('offers:offer-list')
+    
+
+    
     
 
