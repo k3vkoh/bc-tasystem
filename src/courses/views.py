@@ -6,8 +6,11 @@ from openpyxl import load_workbook
 from users.models import CustomUser as User
 from random import randint
 from django.views.generic import ListView, DetailView
+from django.contrib import messages
 
 class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
+
+    success_message = 'File Uploaded Successfully'
 
     def get(self, request):
         return render(request, 'upload.html')
@@ -16,7 +19,7 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         excel_file = request.FILES.get('excel_file')
         if excel_file:
             self.process_excel_file(excel_file)
-            return render(request, 'success.html')
+        messages.success(self.request, 'Successfully Uploaded Excel File')
         return render(request, 'upload.html')
     
     def process_excel_file(self, excel_file):
