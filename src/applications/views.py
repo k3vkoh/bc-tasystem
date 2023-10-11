@@ -6,6 +6,8 @@ from .models import Application
 from courses.models import Course
 from .forms import ApplicationForm
 from django.urls import reverse
+from django.contrib import messages
+
 
 class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Application
@@ -14,12 +16,16 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     success_message = "Your application has been submitted successfully!"
 
     def form_valid(self, form):
+        error = self.ensure_user_can_apply()
+        if error:
+            messages.error(self.request, error)
+            return super().form_invalid(form)
         form.instance.student = self.request.user
         form.instance.course = self.get_object()
-        
-        application = form.save()  # Save the form to get the Application object.
-        course = self.get_object()  # Get the Course object.
-        course.applications.add(application)  # Add the application to the course's applications.
+        application = form.save()  
+        course = self.get_object()  
+        course.applications.add(application) 
+        self.request.user.applications.add(application)
         return super().form_valid(form)
     
     def get_object(self):
@@ -35,6 +41,20 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     
     def get_success_url(self):
         return self.get_object().get_absolute_url()
+
+    def ensure_user_can_apply(self):
+        user = self.request.user
+        if user.is_professor():
+            return "You cannot apply to a course if you are a professor"
+        if user.reached_max_applications():
+            return "You have reached the maximum number of courses you can apply to (5)"
+        if user.already_applied_to_course(self.get_object()):
+            return "You have already applied to this course"
+        if user.is_ta():
+            return "You are already a TA for a course"
+        return None
+    
+
     
 
 class ApplicationListView(LoginRequiredMixin, ListView):
