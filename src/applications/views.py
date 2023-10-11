@@ -55,8 +55,6 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         return None
     
 
-    
-
 class ApplicationListView(LoginRequiredMixin, ListView):
     model = Application
     template_name = 'applications.html'

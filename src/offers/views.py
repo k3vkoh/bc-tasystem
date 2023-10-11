@@ -80,6 +80,9 @@ class OfferDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return reverse('offers:offer-list')
     
     def test_func(self):
+        offer = self.get_object()
+        if offer.get_status() != "PENDING":
+            return False
         return self.get_object().sender == self.request.user or self.request.user.is_superuser
     
     def get_context_data(self, **kwargs):
