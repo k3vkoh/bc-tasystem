@@ -135,6 +135,26 @@ class OfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         return self.get_object().recipient == self.request.user or self.request.user.is_superuser
 
+class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Offer
+    fields = []
+    template_name = 'offer_reject.html'
+    success_message = "Your offer has been rejected successfully!"
+
+    def form_valid(self, form):
+        self.object.reject()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('offers:offer-list')
+    
+    def test_func(self):
+        return self.get_object().recipient == self.request.user or self.request.user.is_superuser
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['application'] = self.get_object().application
+        return context
     
 
     

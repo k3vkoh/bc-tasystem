@@ -9,7 +9,7 @@
 
 {% if offer.get_status == "PENDING" %}
     <p><a href="{% url 'offers:offer-accept' offer.id %}">Accept</a></p>
-    
+    <p><a href="{% url 'offers:offer-reject' offer.id %}">Reject</a></p>
 {% endif %}
 
 
