@@ -109,5 +109,28 @@ class ApplicationDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView)
         context['course'] = self.get_object().course
         return context
 
+class ApplicationRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Application
+    fields = []
+    template_name = 'application_reject.html'
+    success_message = "The application has been rejected successfully!"
+    
+    def form_valid(self, form):
+        self.object.reject()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('applications:application-list')
+    
+    def test_func(self):
+        application = self.get_object()
+        if application.get_status() != "PENDING":
+            return False
+        return self.request.user.is_superuser or self.request.user == self.get_object().course.professor
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['course'] = self.get_object().course
+        return context
         
 

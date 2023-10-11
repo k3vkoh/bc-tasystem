@@ -12,11 +12,14 @@
 
 {% if user == course.professor or user.is_superuser %}
     {% if application.get_status == 'PENDING' %}
-    <p><a href="{% url 'offers:offer-create' application.id %}">Send Offer</a></p>
+        <p><a href="{% url 'offers:offer-create' application.id %}">Send Offer</a></p>
+        <p><a href="{% url 'applications:application-reject' application.id %}">Reject Application</a></p>
     {% endif %}
-<p><a href="#">Reject Application</a></p>
 {% else %}
-<p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
+
+    {% if application.get_status == 'PENDING' %}
+        <p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
+    {% endif %}
 {% endif %}
 
 {% endblock %}
