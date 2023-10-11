@@ -81,7 +81,7 @@ class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def post(self, request):
         self.archive_courses()
-        return redirect('manage-course') 
+        return redirect('courses:manage-course') 
 
     def archive_courses(self):
         current_courses = Course.objects.all()
