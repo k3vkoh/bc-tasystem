@@ -48,7 +48,9 @@
 <br/>
 <h2>Applications</h2>
 {% for application in course.applications.all %}
-  <p>{{ application }}</p>
+  <p>{{ application.student }}
+    <a href="{% url 'applications:application-detail' application.id %}">- View Application</a>
+  </p>
 {% endfor %}
 
 

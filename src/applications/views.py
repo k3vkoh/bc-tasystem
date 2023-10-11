@@ -16,6 +16,10 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     def form_valid(self, form):
         form.instance.student = self.request.user
         form.instance.course = self.get_object()
+        
+        application = form.save()  # Save the form to get the Application object.
+        course = self.get_object()  # Get the Course object.
+        course.applications.add(application)  # Add the application to the course's applications.
         return super().form_valid(form)
     
     def get_object(self):
