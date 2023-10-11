@@ -123,6 +123,18 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return None
 
 
+class OfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Offer
+    template_name = 'offer_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['offer'] = self.get_object()
+        return context
+    
+    def test_func(self):
+        return self.get_object().recipient == self.request.user or self.request.user.is_superuser
+
     
 
     
