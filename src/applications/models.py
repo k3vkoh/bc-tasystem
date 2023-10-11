@@ -26,7 +26,7 @@ class Application(models.Model):
     status = models.IntegerField(choices=[(tag.value, tag.name) for tag in ApplicationStatus], default=ApplicationStatus.PENDING.value)
 
     def __str__(self):
-        return self.student + " - " + self.course
+        return self.student.first_name + ' ' + self.student.last_name + ' - ' + self.course.course_title
     
     def get_absolute_url(self):
         return reverse('applications:application-detail', kwargs={'pk': self.pk})

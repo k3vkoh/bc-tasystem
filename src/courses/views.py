@@ -122,7 +122,7 @@ class ListView(LoginRequiredMixin, ListView):
         return context
 
 
-class CourseDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'course_detail.html'
 
@@ -130,6 +130,3 @@ class CourseDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(pk=self.kwargs.get('pk'))
         return context
-
-    def test_func(self):
-        return (self.request.user.is_professor() and self.request.user == self.get_object().professor) or self.request.user.is_superuser

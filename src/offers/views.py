@@ -8,6 +8,7 @@ from applications.models import Application
 from courses.models import Course
 from .models import Offer
 from django.urls import reverse
+from django.contrib import messages
 
 
 class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -41,6 +42,7 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     
     def get_success_url(self):
         return reverse("offers:offer-list")
+
     
 class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
@@ -77,6 +79,9 @@ class OfferDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return reverse('offers:offer-list')
     
     def test_func(self):
+        offer = self.get_object()
+        if offer.get_status() != "PENDING":
+            return False
         return self.get_object().sender == self.request.user or self.request.user.is_superuser
     
     def get_context_data(self, **kwargs):
@@ -90,6 +95,10 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     fields = []
 
     def form_valid(self, form):
+        error = self.ensure_user_can_accept()
+        if error:
+            messages.error(self.request, error)
+            return self.form_invalid(form)
         self.object.accept()
         return super().form_valid(form)
     
@@ -103,6 +112,49 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     
     def get_success_url(self):
         return reverse('offers:offer-list')
+
+    def ensure_user_can_accept(self):
+        user = self.request.user
+        course = self.get_object().course
+        if user.is_ta():
+            return "You are already a TA for a course"
+        if course.current_tas.count() >= course.num_tas:
+            return "This course already has the maximum number of TAs"
+        return None
+
+
+class OfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Offer
+    template_name = 'offer_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['offer'] = self.get_object()
+        return context
+    
+    def test_func(self):
+        return self.get_object().recipient == self.request.user or self.request.user.is_superuser
+
+class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Offer
+    fields = []
+    template_name = 'offer_reject.html'
+    success_message = "Your offer has been rejected successfully!"
+
+    def form_valid(self, form):
+        self.object.reject()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('offers:offer-list')
+    
+    def test_func(self):
+        return self.get_object().recipient == self.request.user or self.request.user.is_superuser
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['application'] = self.get_object().application
+        return context
     
 
     
