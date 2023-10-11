@@ -38,20 +38,22 @@
         {% endif %} 
       </tr>     
   </tbody>
-
 </table>
 
-<h2>Current TAs</h2>
-{% for ta in course.current_tas.all %}
-  <p>{{ ta }}</p>
-{% endfor %}
-<br/>
-<h2>Applications</h2>
-{% for application in course.applications.all %}
-  <p>{{ application.student }}
-    <a href="{% url 'applications:application-detail' application.id %}">- View Application</a>
-  </p>
-{% endfor %}
+{% if user == course.professor or user.is_superuser %}
+    <h2>Current TAs</h2>
+    {% for ta in course.current_tas.all %}
+    <p>{{ ta }}</p>
+    {% endfor %}
+    <br/>
+    <h2>Applications</h2>
+    {% for application in course.applications.all %}
+    <p>{{ application.student }}
+        <a href="{% url 'applications:application-detail' application.id %}">- View Application</a>
+    </p>
+    {% endfor %}
+{% endif %}
+
 
 
 {% endblock %}

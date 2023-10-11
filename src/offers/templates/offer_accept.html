@@ -2,7 +2,7 @@
 {% load bootstrapify %}
 {% block content %} 
 
-<h2>Are you sure you want to accept this offer?</h2>
+<h2>Accept offer for {{ offer.course }}?</h2>
 <p>You can only TA for one course</p>
 
 <form method="post" class="form-group">
@@ -10,6 +10,8 @@
     <button type="submit" class="btn btn-primary">Yes</button>
 </form>
 
-<p><a href="{% url 'offers:offer-list' %}">Back to Offers</a></p>
+<p><a href="{% url 'offers:offer-detail' offer.id %}">Back to Offer</a></p>
+
+<p><a href="{% url 'courses:course-detail' offer.course.id %}">View course information</a></p>
 
 {% endblock %}
