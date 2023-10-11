@@ -8,6 +8,7 @@ from applications.models import Application
 from courses.models import Course
 from .models import Offer
 from django.urls import reverse
+from django.contrib import messages
 
 
 class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -17,6 +18,7 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     fields = []
 
     def form_valid(self, form):
+        
         form.instance.sender = self.request.user
         form.instance.recipient = self.get_object().student
         form.instance.course = self.get_object().course
@@ -41,6 +43,7 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     
     def get_success_url(self):
         return reverse("offers:offer-list")
+
     
 class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
@@ -90,6 +93,10 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     fields = []
 
     def form_valid(self, form):
+        error = self.ensure_user_can_accept()
+        if error:
+            messages.error(self.request, error)
+            return self.form_invalid(form)
         self.object.accept()
         return super().form_valid(form)
     
@@ -103,6 +110,17 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     
     def get_success_url(self):
         return reverse('offers:offer-list')
+
+    def ensure_user_can_accept(self):
+        user = self.request.user
+        course = self.get_object().course
+        if user.is_ta():
+            return "You are already a TA for a course"
+        if course.current_tas.count() >= course.num_tas:
+            return "This course already has the maximum number of TAs"
+        return None
+
+
     
 
     
