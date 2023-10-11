@@ -18,7 +18,6 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     fields = []
 
     def form_valid(self, form):
-        
         form.instance.sender = self.request.user
         form.instance.recipient = self.get_object().student
         form.instance.course = self.get_object().course
