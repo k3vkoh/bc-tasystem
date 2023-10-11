@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load bootstrapify %}
+{% block content %} 
+
+<h2>Offer to {{ offer.course }}</h2>
+
+<p><strong>Instructor: </strong>{{ offer.course.professor }}</p>
+<p><strong>Offer Status: </strong>{{ offer.get_status }}</p>
+
+{% if offer.get_status == "PENDING" %}
+    <p><a href="{% url 'offers:offer-accept' offer.id %}">Accept</a></p>
+    <p><a href="{% url 'offers:offer-reject' offer.id %}">Reject</a></p>
+{% endif %}
+
+
+{% endblock %}

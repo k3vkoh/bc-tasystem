@@ -11,7 +11,9 @@
         
         {% if user.is_professor or user.is_superuser %}
         {% else %}
-        <p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
+            {% if application.get_status == 'PENDING' %}
+            <p><a href="{% url 'applications:application-delete' application.id %}">Withdraw Application</a></p>
+            {% endif %}
         {% endif %}
     </div>
 {% endfor %}

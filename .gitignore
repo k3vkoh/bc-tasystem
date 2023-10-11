@@ -139,3 +139,6 @@ pyvenv.cfg
 
 # ds_store
 /.DS_Store
+
+# todo
+/todo.txt

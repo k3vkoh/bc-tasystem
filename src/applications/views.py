@@ -6,6 +6,8 @@ from .models import Application
 from courses.models import Course
 from .forms import ApplicationForm
 from django.urls import reverse
+from django.contrib import messages
+
 
 class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Application
@@ -14,8 +16,16 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     success_message = "Your application has been submitted successfully!"
 
     def form_valid(self, form):
+        error = self.ensure_user_can_apply()
+        if error:
+            messages.error(self.request, error)
+            return super().form_invalid(form)
         form.instance.student = self.request.user
         form.instance.course = self.get_object()
+        application = form.save()  
+        course = self.get_object()  
+        course.applications.add(application) 
+        self.request.user.applications.add(application)
         return super().form_valid(form)
     
     def get_object(self):
@@ -31,6 +41,18 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     
     def get_success_url(self):
         return self.get_object().get_absolute_url()
+
+    def ensure_user_can_apply(self):
+        user = self.request.user
+        if user.is_professor():
+            return "You cannot apply to a course if you are a professor"
+        if user.reached_max_applications():
+            return "You have reached the maximum number of courses you can apply to (5)"
+        if user.already_applied_to_course(self.get_object()):
+            return "You have already applied to this course"
+        if user.is_ta():
+            return "You are already a TA for a course"
+        return None
     
 
 class ApplicationListView(LoginRequiredMixin, ListView):
@@ -64,6 +86,9 @@ class ApplicationDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         return reverse('applications:application-list')
     
     def test_func(self):
+        application = self.get_object()
+        if application.get_status() != "PENDING":
+            return False
         return self.request.user.is_superuser or self.request.user == self.get_object().student
     
     def get_context_data(self, **kwargs):
@@ -84,5 +109,28 @@ class ApplicationDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView)
         context['course'] = self.get_object().course
         return context
 
+class ApplicationRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Application
+    fields = []
+    template_name = 'application_reject.html'
+    success_message = "The application has been rejected successfully!"
+    
+    def form_valid(self, form):
+        self.object.reject()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('applications:application-list')
+    
+    def test_func(self):
+        application = self.get_object()
+        if application.get_status() != "PENDING":
+            return False
+        return self.request.user.is_superuser or self.request.user == self.get_object().course.professor
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['course'] = self.get_object().course
+        return context
         
 

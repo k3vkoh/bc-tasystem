@@ -31,9 +31,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     courses = models.ManyToManyField("courses.Course", blank=True)
     course_working_for = models.ForeignKey("courses.Course", on_delete=models.CASCADE, null=True, blank=True, related_name='course_working_for')
+    applications = models.ManyToManyField("applications.Application", blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
@@ -42,12 +44,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.professor
     
     def is_student(self):
-        return not self.professor 
-    
+        return not self.professor
 
-    # dawd
-    
+    def reached_max_applications(self):
+        return self.applications.count() >= 5
 
+    def already_applied_to_course(self, course):
+        return self.applications.filter(course=course).exists()
+    
+    def is_ta(self):
+        return self.course_working_for is not None
 
 
     

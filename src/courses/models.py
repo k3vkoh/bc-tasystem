@@ -27,10 +27,13 @@ class Course(models.Model):
 
 
 	def __str__(self):
-		return self.course_title
+		return f"{self.course_title} ({self.section}) - {self.class_type}"
 	
 	def get_absolute_url(self):
 		return reverse('home')
+
+	def get_object(self):
+		return self
 
 
 class ArchivedCourse(models.Model):
