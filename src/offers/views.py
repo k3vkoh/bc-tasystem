@@ -92,7 +92,6 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
     def form_valid(self, form):
         self.object.accept()
         return super().form_valid(form)
-
     
     def test_func(self):
         return self.get_object().recipient == self.request.user or self.request.user.is_superuser

@@ -32,6 +32,9 @@ class Course(models.Model):
 	def get_absolute_url(self):
 		return reverse('home')
 
+	def get_object(self):
+		return self
+
 
 class ArchivedCourse(models.Model):
 
