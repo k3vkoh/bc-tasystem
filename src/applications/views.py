@@ -88,6 +88,9 @@ class ApplicationDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         return reverse('applications:application-list')
     
     def test_func(self):
+        application = self.get_object()
+        if application.get_status() != "PENDING":
+            return False
         return self.request.user.is_superuser or self.request.user == self.get_object().student
     
     def get_context_data(self, **kwargs):

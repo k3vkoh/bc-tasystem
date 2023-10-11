@@ -8,4 +8,5 @@ urlpatterns = [
     path('', OfferListView.as_view(), name='offer-list'),
     path('delete/<int:pk>/', OfferDeleteView.as_view(), name='offer-delete'),
     path('accept/<int:pk>/', OfferAcceptView.as_view(), name='offer-accept'),
+    
 ]
