@@ -6,35 +6,35 @@
 
 
 <div class="mb-3">
-    <label class="font-weight-bold">Applicant:</label>
+    <label class="fw-bold">Applicant:</label>
     <p>{{ application.student }}</p>
 </div>
 
 <div class="mb-3">
-    <label class="font-weight-bold">Instructor:</label>
+    <label class="fw-bold">Instructor:</label>
     <p>{{ application.course.professor }}</p>
 </div>
 
 <div class="mb-3">
-    <label class="font-weight-bold">Application Status:</label>
+    <label class="fw-bold">Application Status:</label>
     <p>{{ application.get_status }}</p>
 </div>
 
 <div class="mb-3">
-    <label class="font-weight-bold">Additional Information:</label>
+    <label class="fw-bold">Additional Information:</label>
     <p>{{ application.additional_information }}</p>
 </div>
 
-<a href="{% url 'applications:application-list' %}" class="btn btn-secondary btn-sm mb-3">Back to Applications</a>
+<a href="{% url 'applications:application-list' %}" class="btn btn-outline-secondary btn-sm mb-3">Back to Applications</a>
 
 {% if user == application.course.professor or user.is_superuser %}
     {% if application.get_status == 'PENDING' %}
-        <a href="{% url 'offers:offer-create' application.id %}" class="btn btn-success btn-sm">Send Offer</a>
-        <a href="{% url 'applications:application-reject' application.id %}" class="btn btn-danger btn-sm ml-2">Reject Application</a>
+        <a href="{% url 'offers:offer-create' application.id %}" class="btn btn-outline-success btn-sm mb-3 ms-2">Send Offer</a>
+        <a href="{% url 'applications:application-reject' application.id %}" class="btn btn-outline-danger btn-sm ms-2 mb-3">Reject Application</a>
     {% endif %}
 {% else %}
     {% if application.get_status == 'PENDING' %}
-        <a href="{% url 'applications:application-delete' application.id %}" class="btn btn-warning btn-sm">Withdraw Application</a>
+        <a href="{% url 'applications:application-delete' application.id %}" class="btn btn-outline-secondary btn-sm mb-3 ms-2">Withdraw Application</a>
     {% endif %}
 {% endif %}
 

@@ -2,7 +2,7 @@
 {% load bootstrapify %}
 {% block content %} 
 
-<h2>Application for {{ course }}</h2>
+<h2 class="fw-normal mb-4">Application for {{ course }}</h2>
 <form method="post" class="form-group">
     {% csrf_token %}
     {% for field in form %}
@@ -16,7 +16,7 @@
 
         </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Apply</button>
 </form>
 
 {% endblock %}

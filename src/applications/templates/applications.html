@@ -7,13 +7,13 @@
 {% for application in applications %}
     <div class="mb-4 p-3 border rounded">
         <h5 class="mb-2" id="{{ application.id_for_label }}">{{ application.label }}</h5>
-        <p><strong>Application to {{ application.course }}: <span class="badge bg-info">{{ application.get_status }}</span></strong></p>
+        <p><strong>{{ forloop.counter }}. {{ application.course }}: <span class="badge bg-info">{{ application.get_status }}</span></strong></p>
 
         <a href="{% url 'applications:application-detail' application.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
 
         {% if not user.is_professor and not user.is_superuser %}
             {% if application.get_status == 'PENDING' %}
-                <a href="{% url 'applications:application-delete' application.id %}" class="btn btn-outline-danger btn-sm ml-2">Withdraw Application</a>
+                <a href="{% url 'applications:application-delete' application.id %}" class="btn btn-outline-danger btn-sm ms-2">Withdraw Application</a>
             {% endif %}
         {% endif %}
     </div>

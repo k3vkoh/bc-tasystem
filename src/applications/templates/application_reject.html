@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="container mt-5">
+        <h1 class="fw-normal mb-4">Confirm Reject</h1>
+        <p class="mb-4">
+            Are you sure you want to reject this application?
+        </p>
 
-<h2>Are you sure you want to reject this application?</h2>
-
-<form method="post" class="form-group">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Yes</button>
-</form>
-
-<p><a href="{% url 'applications:application-list' %}">Back to Applications</a></p>
-
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">Yes, Reject</button>
+            <a href="{% url 'applications:application-list' %}" class="btn btn-outline-secondary btn-sm ms-2">Cancel</a>
+        </form>
+    </div>
 {% endblock %}
