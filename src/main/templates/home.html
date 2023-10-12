@@ -8,6 +8,12 @@
     <p>Welcome, {{ user }}!</p>
     <p>You are currently a TA for: {{ user.course_working_for }}</p>
     <a href="{% url 'logout' %}">Logout</a>
+    {% if user.is_student %}
+        <a href="{% url 'applications:application-list' %}">View Applications</a>
+    {% endif %}
+    {% if user.is_professor %}
+        <a href="{% url 'courses:course-list' %}">View Courses</a>
+    {% endif %}
 {% else %}
     <p>Welcome, new user!</p>
     <a href="{% url 'login' %}">Login</a> |

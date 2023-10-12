@@ -9,7 +9,7 @@
         <div class="card-body">
             <h5 class="card-title">{{ offer.label }}</h5>
             <p class="card-text">
-                <strong>{{ forloop.counter }}. Offer to {{ offer.application.student }} for {{ offer.course }}</strong>: {{ offer.get_status }}
+                <strong>{{ forloop.counter }}. Offer to {{ offer.application.student }} for {{ offer.course }}</strong>: <span class="badge bg-info">{{ offer.get_status }}</span>
             </p>
             {% if user.is_student %}
                 <a href="{% url 'offers:offer-detail' offer.id %}" class="btn btn-outline-primary btn-sm ms-3">View</a>
