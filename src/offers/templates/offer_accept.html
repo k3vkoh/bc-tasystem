@@ -2,16 +2,17 @@
 {% load bootstrapify %}
 {% block content %} 
 
-<h2>Accept offer for {{ offer.course }}?</h2>
-<p>You can only TA for one course</p>
+<h1 class="fw-normal mb-4">Accept offer for {{ offer.course }}?</h1>
+<p class="mb-4">You can only TA for one course</p>
 
 <form method="post" class="form-group">
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Yes</button>
+    <button type="submit" class="btn btn-outline-primary btn-sm mb-4">Yes</button>
+    <a href="{% url 'offers:offer-detail' offer.id %}" class="btn btn-outline-secondary btn-sm mb-4 ms-2">Back to Offer</a>
+
+    <a href="{% url 'courses:course-detail' offer.course.id %}" class="btn btn-outline-secondary btn-sm mb-4 ms-2">View course information</a>
 </form>
 
-<p><a href="{% url 'offers:offer-detail' offer.id %}">Back to Offer</a></p>
 
-<p><a href="{% url 'courses:course-detail' offer.course.id %}">View course information</a></p>
 
 {% endblock %}

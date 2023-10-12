@@ -2,12 +2,12 @@
 {% load bootstrapify %}
 {% block content %} 
 
-<h2>Reject offer for {{ offer.course }}?</h2>
+<h1 class="fw-normal mb-4">Reject offer for {{ offer.course }}?</h1>
 <p>You can only TA for one course</p>
 
 <form method="post" class="form-group">
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Yes</button>
+    <button type="submit" class="btn btn-outline-danger btn-sm mb-4">Yes</button>
 </form>
 
 <p><a href="{% url 'offers:offer-detail' offer.id %}">Back to Offer</a></p>

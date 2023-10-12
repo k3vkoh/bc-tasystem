@@ -2,14 +2,14 @@
 {% load bootstrapify %}
 {% block content %} 
 
-<h2>Offer to {{ offer.course }}</h2>
+<h2 class="fw-normal mb-4">Offer to {{ offer.course }}</h2>
 
 <p><strong>Instructor: </strong>{{ offer.course.professor }}</p>
-<p><strong>Offer Status: </strong>{{ offer.get_status }}</p>
+<p><strong>Offer Status: </strong> <span class="badge bg-info">{{ offer.get_status }}</span></p>
 
 {% if offer.get_status == "PENDING" %}
-    <p><a href="{% url 'offers:offer-accept' offer.id %}">Accept</a></p>
-    <p><a href="{% url 'offers:offer-reject' offer.id %}">Reject</a></p>
+<a href="{% url 'offers:offer-accept' offer.id %}" class="btn btn-outline-primary btn-sm mb-4">Accept</a>
+<a href="{% url 'offers:offer-reject' offer.id %}" class="btn btn-outline-danger btn-sm mb-4 ms-2">Reject</a>
 {% endif %}
 
 

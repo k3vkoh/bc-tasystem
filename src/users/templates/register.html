@@ -3,8 +3,8 @@
 {% load bootstrapify %}
 
 {% block content %}
-<h2>Register</h2>
-<form method="post" class="form-group">
+<h2 class="fw-normal mb-4">Register</h2>
+<form method="post" class="form-group mb-4">
     {% csrf_token %}
     {% for field in form %}
         <div class="mb-3">
@@ -17,6 +17,6 @@
 
         </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-outline-primary mt-2">Login</button>
 </form>
 {% endblock %}

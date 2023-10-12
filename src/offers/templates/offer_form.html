@@ -2,11 +2,11 @@
 {% load bootstrapify %}
 {% block content %} 
 
-<h2>Are you sure you want to send this offer?</h2>
+<h1 class="fw-normal mb-4">Are you sure you want to send this offer?</h1>
 
 <form method="post" class="form-group">
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Yes</button>
+    <button type="submit" class="btn btn-outline-primary btn-sm mb-4">Yes</button>
 </form>
 
 <p><a href="{% url 'applications:application-list' %}">Back to Applications</a></p>

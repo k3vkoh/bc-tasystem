@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Delete Offer{% endblock %}
-
 {% block content %}
     <div class="container mt-5">
-        <h2>Confirm Delete</h2>
-        <p>
-            Are you sure you want to delete this offer?
+        <h1 class="fw-normal mb-4">Confirm Rescind</h1>
+        <p class="mb-4">
+            Are you sure you want to rescind this offer?
         </p>
 
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-            <a href="{% url 'offers:offer-list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-outline-danger btn-sm">Yes, Rescind</button>
+            <a href="{% url 'offers:offer-list' %}" class="btn btn-outline-secondary btn-sm ms-2">Cancel</a>
         </form>
     </div>
 {% endblock %}
