@@ -1,52 +1,49 @@
 {% extends 'base.html' %}
 {% block content %} 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-<h1>Courses</h1>
-<table class="table table-striped table-bordered table-hover">
-  <thead>
-    <tr>
-      <th>Course Title</th>
-      <th>Professor</th>
-      <th>Class Type</th>
-      <th>Course Number</th>
-      <th>Section</th>
-      <th>Location</th>
-      <th>Timeslot</th>
-      <th>TAs</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody class="table-hover">
-      {% for course in course_data %}
-      <tr>
-        <td><a href="{% url 'courses:course-detail' course.id %}">{{ course.course_title }}</a></td>
-        <td>{{ course.instructor_first_name}} {{ course.instructor_last_name}}</td>
-        <td>{{ course.class_type }}</td>
-        <td>{{ course.course }}</td>
-        <td>{{ course.section }}</td>
-        <td>{{ course.room_name }}</td>
-        <td>{{ course.timeslot }}</td>
-        <td>{{ course.current_tas.count }}/{{ course.num_tas }}</td>
-        {% if course.status == True%}
-          {% if user.is_staff or user.professor %}
-            <td><strong style="color: green"> Open </strong></td>
-          {% else %}
-            <td><a href="{% url 'applications:application-create' course.id %}">Apply</a></td>
-          {% endif %}
+<h1 class="mb-4 display-5">Courses</h1>
+{% for course in course_data %}
+  <div class="course-item list-group-item mb-3 p-4 border rounded">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><a href="{% url 'courses:course-detail' course.id %}">{{ course.course }} - {{ course }}</a></h4>
+        {% if course.status == True %}
+            <span class="badge bg-success text-white">Open</span>
         {% else %}
-          <td><strong style="color: red"> Closed </strong></td>
-        {% endif %} 
-      </tr>     
-      {% endfor %}
-  </tbody>
-</table>
+            <span class="badge bg-danger text-white">Closed</span>
+        {% endif %}
+
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <p><i class="bi bi-person"></i> <strong>Instructor:</strong> {{ course.instructor_first_name }} {{ course.instructor_last_name }}</p>
+        </div>
+        <div class="col-md-4">
+          <p><i class="bi bi-geo-alt"></i> <strong>Location:</strong> {{ course.room_name }}</p>
+        </div>
+        <div class="col-md-4">
+          <p><i class="bi bi-clock"></i> <strong>Timeslot:</strong> {{ course.timeslot }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <p><i class="bi bi-layout-text-window"></i> <strong>Section:</strong> {{ course.section }}</p>
+        </div>
+        <div class="col-md-4">
+            <p><i class="bi bi-people"></i> <strong>TAs:</strong> {{ course.current_tas.count }}/{{ course.num_tas }}</p>
+        </div>
+    </div>
+
+    {% if course.status == True and user.is_student %}
+    <div class="row">
+      <div class="col-md-4">
+          <p><a href="{% url 'applications:application-create' course.id %}">Apply</a></p>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+{% endfor %}
+
 {% endblock %}
-
-
-
