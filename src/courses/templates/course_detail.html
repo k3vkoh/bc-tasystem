@@ -5,13 +5,14 @@
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-0 fw-normal">{{ course }}</h2>
         {% if course.status == True %}
-            <span class="badge badge-success">Open</span>
+            <span class="badge bg-success">Open</span>
         {% else %}
-            <span class="badge badge-danger">Closed</span>
+            <span class="badge bg-danger">Closed</span>
         {% endif %}
     </div>
 
       <div class="row mt-3">
+
         <div class="col-md-4">
             <p><i class="bi bi-person"></i> <strong>Instructor:</strong> {{ course.instructor_first_name }} {{ course.instructor_last_name }}</p>
         </div>
@@ -31,6 +32,14 @@
             <p><i class="bi bi-people"></i> <strong>TAs:</strong> {{ course.current_tas.count }}/{{ course.num_tas }}</p>
         </div>
     </div>
+
+    {% if course.status == True and user.is_student %}
+    <div class="row">
+      <div class="col-md-4">
+          <p><a href="{% url 'applications:application-create' course.id %}">Apply</a></p>
+      </div>
+    </div>
+    {% endif %}
   </div>  
 </div>
 
