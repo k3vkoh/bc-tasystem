@@ -2,9 +2,10 @@ from django.db import models
 from users.models import CustomUser
 from django.urls import reverse
 from django.db.models import Q
+import uuid
 
 class Course(models.Model):
-
+	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	term = models.CharField(max_length=100)
 	class_type = models.CharField(max_length=100)
 	course = models.CharField(max_length=100)

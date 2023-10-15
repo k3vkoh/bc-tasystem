@@ -1,5 +1,6 @@
 from django.db import models
 from enum import Enum
+import uuid
 
 class OfferStatus(Enum):
     PENDING = 1
@@ -7,6 +8,7 @@ class OfferStatus(Enum):
     REJECTED = 3
 
 class Offer(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     application = models.ForeignKey('applications.Application', on_delete=models.CASCADE, related_name='offer_application')
     course = models.ForeignKey('courses.Course', on_delete=models.CASCADE, related_name='offer_course')
     recipient = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='offer_recipient')

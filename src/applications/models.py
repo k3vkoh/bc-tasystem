@@ -3,6 +3,7 @@ from users.models import CustomUser as User
 from courses.models import Course
 from enum import Enum
 from django.urls import reverse
+import uuid
 
 
 class ApplicationStatus(Enum):
@@ -19,6 +20,7 @@ class ApplicationStatus(Enum):
     CONFIRMED = 4
 
 class Application(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     student = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=None)
 
