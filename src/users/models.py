@@ -41,10 +41,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.first_name + ' ' + self.last_name
     
     def is_professor(self):
-        return self.professor
+        return self.professor and not self.is_superuser
     
     def is_student(self):
-        return not self.professor
+        return not self.professor and not self.is_superuser
 
     def reached_max_applications(self):
         return self.applications.count() >= 5
