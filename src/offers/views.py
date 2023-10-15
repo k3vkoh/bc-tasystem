@@ -9,6 +9,7 @@ from courses.models import Course
 from .models import Offer
 from django.urls import reverse
 from django.contrib import messages
+from django.core.mail import send_mail
 
 
 class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -41,6 +42,9 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
     
     def get_success_url(self):
+        subject = 'Offer Received'
+        message = 'You have received an offer'
+        send_email(subject, message)
         return reverse("offers:offer-list")
 
     
@@ -111,6 +115,9 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
     
     def get_success_url(self):
+        subject = 'Offer Accepted'
+        message = 'You student has accepted you offer'
+        send_email(subject, message)
         return reverse('offers:offer-list')
 
     def ensure_user_can_accept(self):
@@ -146,6 +153,9 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return super().form_valid(form)
     
     def get_success_url(self):
+        subject = 'Offer Rejected'
+        message = 'Your offer been rejected'
+        send_email(subject, message)
         return reverse('offers:offer-list')
     
     def test_func(self):
@@ -157,6 +167,14 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
     
 
-    
+def send_email(subject, message):
+
+    subject = subject
+    message = message
+    email_from = 'tasystem2023@gmail.com'
+    recipient_list = ['kohke@bc.edu']
+
+    send_mail(subject, message, email_from, recipient_list)
+
     
 
