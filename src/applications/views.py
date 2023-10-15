@@ -37,6 +37,7 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course'] = self.get_object()
+        context['can_apply'] = self.ensure_user_can_apply()
         return context
     
     def get_success_url(self):
