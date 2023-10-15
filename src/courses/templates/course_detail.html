@@ -36,7 +36,17 @@
     {% if course.status == True and user.is_student %}
     <div class="row">
       <div class="col-md-4">
+        {% if is_professor %}
+            <p class="text-danger">You cannot apply to a course if you are a professor</p>
+        {% elif at_max_apps %}
+            <p class="text-danger">You have reached the maximum number of courses you can apply to (5)</p>
+        {% elif has_applied %}
+            <p class="text-danger">You have already applied to this course</p>
+        {% elif is_ta %}
+            <p class="text-danger">You are already a TA for a course</p>
+        {% else %}
           <p><a href="{% url 'applications:application-create' course.id %}">Apply</a></p>
+        {% endif %}
       </div>
     </div>
     {% endif %}

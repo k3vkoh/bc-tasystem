@@ -136,4 +136,20 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(pk=self.kwargs.get('pk'))
+        context['is_professor'] = self.is_professor()
+        context['at_max_apps'] = self.at_max_apps()
+        context['has_applied'] = self.has_applied()
+        context['is_ta'] = self.is_ta()
         return context
+
+    def is_professor(self):
+        return self.request.user.is_professor()
+
+    def at_max_apps(self):
+        return self.request.user.reached_max_applications()
+
+    def has_applied(self):
+        return self.request.user.already_applied_to_course(self.get_object())
+
+    def is_ta(self):
+        return self.request.user.is_ta()
