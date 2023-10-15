@@ -43,6 +43,13 @@
   </div>  
 </div>
 
+<div class="course-item list-group-item mb-3 p-4 border rounded">
+    <h4 class="mb-4 fw-light"><strong>Description</strong></h4>
+    <div class="card-body">
+          <p>{{course.description}}</p>
+    </div>
+</div>
+
 {% if user == course.professor or user.is_superuser %}
 <div class="course-item list-group-item mb-3 p-4 border rounded">
     <h4 class="mb-4 fw-light"><strong>Current TAs ({{ course.current_tas.count }})</strong></h4>
