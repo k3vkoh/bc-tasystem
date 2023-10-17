@@ -2,23 +2,35 @@
 {% block content %} 
 <div class="container">
 	<div class="row mt-4">
-		<h2>Upload Courses</h2>
+		<h1 class="display-5 mb-4">Manage Courses</h1>
 	</div>
 	<div class="row mt-4">
-		<form method="post" enctype="multipart/form-data">
-		    {% csrf_token %}
-		    <input type="file" name="excel_file">
-		    <button type="submit" class="btn btn-primary">Upload</button>
-		</form>
+		<div class="col-12 mb-4">
+			<form method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				<p class="fs-4">Upload Excel File to Add Courses:</p>
+				<div class="mb-3">
+					<label for="excel_file" class="form-label">Upload Excel File:</label>
+					<input type="file" class="form-control" id="excel_file" name="excel_file">
+				</div>
+				<button type="submit" class="btn btn-outline-primary">Upload</button>
+			</form>
+		</div>
 	</div>
+	
 	<div class="row mt-4">
-		<h2>Close Courses</h2>
+		<div class="col-12">
+			<p class="fs-4">Close Courses</p>
+		</div>
 	</div>
-	<div class="row mt-4">
-		<form method="post" action="archive/">
-    		{% csrf_token %}
-        	<button type="submit" class="btn btn-danger">Close Semester</button>
-		</form>
+	
+	<div>
+		<div class="col-12">
+			<form method="post" action="archive/">
+				{% csrf_token %}
+				<button type="submit" class="btn btn-outline-danger">Close Semester</button>
+			</form>
+		</div>
 	</div>
 </div>
 {% endblock %}

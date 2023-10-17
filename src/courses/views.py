@@ -127,12 +127,24 @@ class ListView(LoginRequiredMixin, ListView):
         professor_id = self.request.GET.get('professor_id', None)
         
         if professor_id:
-            return Course.objects.filter(professor__id=professor_id)
+            all_courses = Course.objects.filter(professor__id=professor_id)
+        elif user.is_student() or user.is_superuser:
+            all_courses = Course.objects.all()
+        else:
+            all_courses = Course.objects.filter(professor=user)
+
+        courses = {}
+        for course in all_courses.filter(class_type="Lecture").order_by('course'):
+            courses[course] = []
         
-        if user.is_student() or user.is_superuser:
-            return Course.objects.all()
-        
-        return Course.objects.filter(professor=user)
+        for course in all_courses.exclude(class_type="Lecture").order_by('course'):
+            for lecture_course in courses.keys():
+                if lecture_course.course == course.course and lecture_course.professor == course.professor:
+                    courses[lecture_course].append(course)
+                    break
+
+        return courses
+
 
 
 class CourseDetailView(LoginRequiredMixin, DetailView):
