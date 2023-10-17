@@ -1,0 +1,8 @@
+TODO:
+- Test system further to see if there are any bugs or situations where students/professors can do things that they are not supposed to
+
+For our meeting:
+- We need talk about how to properly nest discussions and labs under their respective courses. 
+- Currently, students are required to submit separate applications for course sections that are essentially the same class. To illustrate, "Computer Science (01)" and "Computer Science (02)" — both instructed by Mira Yun — are treated as distinct classes. This forces students to apply twice for what is essentially the same course.
+- Additionally, we need clarity on how to associate discussions and labs with their main lectures. Right now, discussions and labs are treated as standalone courses. The CSV format provided by Professor Samary does not offer a way to link them to a parent lecture. Should we determine these links arbitrarily, perhaps using a round-robin algorithm based on the professor and class? Or is there a specific criteria we should adhere to?
+
