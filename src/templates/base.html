@@ -21,20 +21,8 @@
   </head>
   <body>
     {% include "components/navbar.html" %}
-    <main role="main" class="container d-flex flex-column min-vh-100">
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'error' %}
-                  <div class="alert alert-danger">
-                    {{ message }}
-                  </div>
-                {% else %}
-                  <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                  </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+    <main role="main" class="container min-vh-100">
+        {% include "components/messages.html" %}
         {% block content %}
         {% endblock %}
     </main>
