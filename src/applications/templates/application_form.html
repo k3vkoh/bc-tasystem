@@ -4,7 +4,7 @@
 
 <h2 class="fw-normal mb-4">Application for {{ course }}</h2>
 {% if can_apply != None %}
-    <p class="text-danger">{{can_apply}}</p>
+    <p class="text-danger">{{ can_apply }}</p>
 {% else %}
 <form method="post" class="form-group">
     {% csrf_token %}

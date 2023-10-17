@@ -119,10 +119,16 @@ class ListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['professors'] = User.objects.filter(professor=True)
         return context
     
     def get_queryset(self):
         user = self.request.user
+        professor_id = self.request.GET.get('professor_id', None)
+        
+        if professor_id:
+            return Course.objects.filter(professor__id=professor_id)
+        
         if user.is_student() or user.is_superuser:
             return Course.objects.all()
         

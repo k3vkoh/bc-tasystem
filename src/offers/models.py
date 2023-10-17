@@ -27,7 +27,7 @@ class Offer(models.Model):
         self.status = OfferStatus.ACCEPTED.value
         self.application.confirm()
         self.course.current_tas.add(self.recipient)
-        if self.course.num_tas >= self.course.current_tas.count():
+        if self.course.current_tas.count() >= self.course.num_tas:
             self.course.status = False
         self.course.save()
         self.recipient.course_working_for = self.course
