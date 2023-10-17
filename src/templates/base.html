@@ -21,7 +21,7 @@
   </head>
   <body>
     {% include "components/navbar.html" %}
-    <main role="main" class="container">
+    <main role="main" class="container d-flex flex-column min-vh-100">
         {% if messages %}
             {% for message in messages %}
                 {% if message.tags == 'error' %}
