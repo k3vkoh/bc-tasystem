@@ -15,7 +15,7 @@
                 {% for course in user.courses.all %}
                     <li class="list-group-item">
                         <a href="{% url 'courses:course-detail' course.id %}">
-                            {{course.course_title}} {{course.course}} {{course.section}}:
+                            {{ course.course_title}} {{course.course}} {{course.section}}:
                             {{ course.current_tas.count }}/{{ course.num_tas }}
                         </a>
                     </li>

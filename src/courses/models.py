@@ -26,6 +26,8 @@ class Course(models.Model):
 
 	applications = models.ManyToManyField("applications.Application", blank=True, related_name='applications')
 
+	has_discussions = models.BooleanField(default=False)
+
 
 	def __str__(self):
 		return f"{self.course_title} ({self.section}) - {self.class_type}"

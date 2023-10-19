@@ -9,7 +9,6 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 
 class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
-
     def get(self, request):
         return render(request, 'upload.html')
 
@@ -49,6 +48,11 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         return instructor
 
     def create_course(self, row, instructor):
+        excluded_lectures = ["Computer Science I", "Computer Science II", "Computer Organization and Lab"]
+        
+        if row[5] in excluded_lectures and row[1] == "Lecture":
+            return
+        
         new_class = Course.objects.create(
             term=row[0],
             class_type=row[1],
@@ -78,7 +82,6 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
 
 
 class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
-
     def post(self, request):
         self.archive_courses()
         return redirect('courses:manage-course') 
