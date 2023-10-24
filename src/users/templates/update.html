@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-
 {% load bootstrapify %}
-
 {% block content %}
+
 <h2 class="fw-normal mb-4">Profile</h2>
 <form method="post" class="form-group mb-4">
     {% csrf_token %}
@@ -14,10 +13,9 @@
             {% else %}
                 {{ field|bootstrap }}
             {% endif %}
-
         </div>
     {% endfor %}
     <button type="submit" class="btn btn-outline-primary mt-2">Update</button>
-    <a href="{% url 'password_reset' %}" class="btn btn-primary mt-2">Reset Password</a>
 </form>
+
 {% endblock %}

@@ -19,27 +19,29 @@ class ApplicationStatus(Enum):
     REJECTED = 3
     CONFIRMED = 4
 
+
 class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     student = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=None)
 
     additional_information = models.TextField(max_length=500, blank=True)
-    status = models.IntegerField(choices=[(tag.value, tag.name) for tag in ApplicationStatus], default=ApplicationStatus.PENDING.value)
+    status = models.IntegerField(choices=[(
+        tag.value, tag.name) for tag in ApplicationStatus], default=ApplicationStatus.PENDING.value)
 
     def __str__(self):
         return self.student.first_name + ' ' + self.student.last_name + ' - ' + self.course.course_title
-    
+
     def get_absolute_url(self):
         return reverse('applications:application-detail', kwargs={'pk': self.pk})
-    
+
     def get_status(self):
         return ApplicationStatus(self.status).name
-    
+
     def reset(self):
         self.status = ApplicationStatus.PENDING.value
         self.save()
-    
+
     def accept(self):
         self.status = ApplicationStatus.ACCEPTED.value
         self.save()
@@ -47,7 +49,7 @@ class Application(models.Model):
     def reject(self):
         self.status = ApplicationStatus.REJECTED.value
         self.save()
-    
+
     def confirm(self):
         self.status = ApplicationStatus.CONFIRMED.value
         self.save()

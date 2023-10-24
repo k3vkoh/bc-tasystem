@@ -2,24 +2,31 @@ from django.db import models
 from enum import Enum
 import uuid
 
+
 class OfferStatus(Enum):
     PENDING = 1
     ACCEPTED = 2
     REJECTED = 3
 
+
 class Offer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    application = models.ForeignKey('applications.Application', on_delete=models.CASCADE, related_name='offer_application')
-    course = models.ForeignKey('courses.Course', on_delete=models.CASCADE, related_name='offer_course')
-    recipient = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='offer_recipient')
-    sender = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='offer_sender')
+    application = models.ForeignKey(
+        'applications.Application', on_delete=models.CASCADE, related_name='offer_application')
+    course = models.ForeignKey(
+        'courses.Course', on_delete=models.CASCADE, related_name='offer_course')
+    recipient = models.ForeignKey(
+        'users.CustomUser', on_delete=models.CASCADE, related_name='offer_recipient')
+    sender = models.ForeignKey(
+        'users.CustomUser', on_delete=models.CASCADE, related_name='offer_sender')
 
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=[(tag.value, tag.name) for tag in OfferStatus], default=OfferStatus.PENDING.value)
+    status = models.IntegerField(choices=[(
+        tag.value, tag.name) for tag in OfferStatus], default=OfferStatus.PENDING.value)
 
     def __str__(self):
         return f'Offer for {self.course} from {self.sender} to {self.recipient}'
-    
+
     def get_status(self):
         return OfferStatus(self.status).name
 
@@ -41,4 +48,4 @@ class Offer(models.Model):
 
     def reset(self):
         self.status = OfferStatus.PENDING.value
-        self.save()       
+        self.save()

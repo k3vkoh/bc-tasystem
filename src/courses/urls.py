@@ -4,9 +4,9 @@ from .views import UploadView, ListView, CloseView, CourseDetailView
 app_name = 'courses'
 
 urlpatterns = [
-	path('', ListView.as_view(), name='course-list'),
+    path('', ListView.as_view(), name='course-list'),
     path('manage/', UploadView.as_view(), name='manage-course'),
     path('manage/archive/', CloseView.as_view(), name='archive-course'),
-    # path('<int:pk>/', CourseDetailView.as_view(), name='course-detail'),
-    re_path(r'^(?P<pk>[0-9a-f-]+)/$', CourseDetailView.as_view(), name='course-detail'),
+    re_path(r'^(?P<pk>[0-9a-f-]+)/$',
+            CourseDetailView.as_view(), name='course-detail'),
 ]

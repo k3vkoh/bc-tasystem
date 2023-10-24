@@ -8,8 +8,8 @@ from random import randint
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 
-class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
 
+class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request):
         return render(request, 'upload.html')
 
@@ -25,21 +25,22 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         sheet = workbook.active
 
         for row in sheet.iter_rows(values_only=True):
-            if not row[0] or row[0] == 'Term': 
+            if not row[0] or row[0] == 'Term':
                 continue
             instructor = self.get_or_create_instructor_from_row(row)
             self.create_course(row, instructor)
-    
+
     def get_or_create_instructor_from_row(self, row):
         instructor_first_name = row[6].split(',')[1].strip()
         instructor_last_name = row[6].split(',')[0].strip()
-        
+
         instructor, created = User.objects.get_or_create(
             first_name=instructor_first_name,
             last_name=instructor_last_name,
             defaults={
                 'professor': True,
-                'email': f"{instructor_last_name.lower()[:4]}@bc.edu",  # TODO: Change this to a valid email
+                # TODO: Change this to a valid email
+                'email': f"{instructor_last_name.lower()[:4]}@bc.    edu",
                 'eagleid': self.generate_eagleid()
             }
         )
@@ -49,6 +50,12 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         return instructor
 
     def create_course(self, row, instructor):
+        excluded_lectures = ["Computer Science I",
+                             "Computer Science II", "Computer Organization and Lab"]
+
+        if row[5] in excluded_lectures and row[1] == "Lecture":
+            return
+
         new_class = Course.objects.create(
             term=row[0],
             class_type=row[1],
@@ -66,22 +73,21 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             professor=instructor
         )
         instructor.courses.add(new_class)
-    
+
     def generate_eagleid(self):
         eagleid = randint(10000000, 99999999)
         while User.objects.filter(eagleid=eagleid).exists():
             eagleid = randint(10000000, 99999999)
         return eagleid
-    
+
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser
 
 
 class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
-
     def post(self, request):
         self.archive_courses()
-        return redirect('courses:manage-course') 
+        return redirect('courses:manage-course')
 
     def archive_courses(self):
         current_courses = Course.objects.all()
@@ -107,9 +113,9 @@ class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         Course.objects.all().delete()
 
-
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser
+
 
 class ListView(LoginRequiredMixin, ListView):
     model = Course
@@ -121,17 +127,17 @@ class ListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['professors'] = User.objects.filter(professor=True)
         return context
-    
+
     def get_queryset(self):
         user = self.request.user
         professor_id = self.request.GET.get('professor_id', None)
-        
+
         if professor_id:
             return Course.objects.filter(professor__id=professor_id)
-        
+
         if user.is_student() or user.is_superuser:
             return Course.objects.all()
-        
+
         return Course.objects.filter(professor=user)
 
 
