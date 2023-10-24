@@ -65,7 +65,7 @@
     <h4 class="mb-4 fw-light"><strong>Current TAs ({{ course.current_tas.count }})</strong></h4>
     <div class="card-body">
         {% for ta in course.current_tas.all %}
-          <p>{{ forloop.counter }}. {{ ta }}</p>
+          <p>{{ forloop.counter }}. {{ ta }} -- {{ ta.email }}</p>
         {% endfor %}
     </div>
 </div>
