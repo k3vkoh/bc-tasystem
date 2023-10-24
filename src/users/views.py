@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from .forms import CustomUserCreationForm, CustomUserUpdateForm
 from .models import CustomUser
 
+
 class RegisterView(CreateView):
     template_name = 'register.html'
     form_class = CustomUserCreationForm
@@ -16,6 +17,7 @@ class RegisterView(CreateView):
         login(self.request, user)
         messages.success(self.request, 'Account created successfully')
         return super().form_valid(form)
+
 
 class ProfileView(UpdateView):
     model = CustomUser
