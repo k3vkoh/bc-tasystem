@@ -71,12 +71,15 @@
 </div>
 
 <div class="course-item list-group-item mb-3 p-4 border rounded">
-    <h4 class="mb-4 fw-light"><strong>Applications ({{ course.applications.count }})</strong></h4>
+    <!-- <h4 class="mb-4 fw-light"><strong>Applications ({{ course.applications.count }})</strong></h4> -->
+    <h4 class="mb-4 fw-light"><strong>Applications</strong></h4>
     <div class="card-body">
         {% for application in course.applications.all %}
-        <p>{{ forloop.counter }}. {{ application.student }} - 
-            <a href="{% url 'applications:application-detail' application.id %}" class="btn btn-outline-secondary btn-sm">View Application</a>
-        </p>
+            {% if application.status == 1%}
+            <p>{{ forloop.counter }}. {{ application.student }} - 
+                <a href="{% url 'applications:application-detail' application.id %}" class="btn btn-outline-secondary btn-sm">View Application</a>
+            </p>
+            {% endif%}
         {% endfor %}
     </div>
 </div>
