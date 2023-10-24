@@ -9,8 +9,9 @@ from courses.models import Course
 from .models import Offer
 from django.urls import reverse
 from django.contrib import messages
-from django.core.mail import send_mail
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Offer
@@ -42,9 +43,13 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
     
     def get_success_url(self):
-        subject = 'Offer Received'
-        message = 'You have received an offer'
-        send_email(subject, message)
+        # email for the student after an offer is sent
+        url = reverse('offers:offer-accept', args=[self.get_object().course.id])
+        subject = f'TA Application Update For {self.get_object().student}'
+        message = [f'Dear {self.get_object().student}',f'Congratulations! You have received an offer for {self.get_object().course}', f'Access the offer here: {url}']
+        # recipients = self.get_object().student.email # for production
+        recipients = 'kohke@bc.edu' # for testing purposes
+        send_html_email(subject, recipients, message)
         return reverse("offers:offer-list")
 
     
@@ -115,9 +120,13 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
     
     def get_success_url(self):
-        subject = 'Offer Accepted'
-        message = 'You student has accepted you offer'
-        send_email(subject, message)
+        # email for the professor after the student accepts the offer
+        url = reverse('courses:course-detail', args=[self.get_object().course.id])
+        subject = f'TA Offer Update For {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}'
+        message = [f'Dear {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}',f'The student has accepted your offer. You can just the status of {self.get_object().course} here: {url}']
+        # recipients = self.get_object().course.professor.email # for production
+        recipients = 'kohke@bc.edu' # for testing purposes
+        send_html_email(subject, recipients, message)
         return reverse('offers:offer-list')
 
     def ensure_user_can_accept(self):
@@ -153,9 +162,13 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return super().form_valid(form)
     
     def get_success_url(self):
-        subject = 'Offer Rejected'
-        message = 'Your offer been rejected'
-        send_email(subject, message)
+        # email for the professor after the student declines the offer
+        url = reverse('courses:course-detail', args=[self.get_object().course.id])
+        subject = f'TA Offer Update For {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}'
+        message = [f'Dear {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}',f'The student has declined your offer. You can just the status of {self.get_object().course} here: {url}']
+         # recipients = self.get_object().course.professor.email # for production
+        recipients = 'kohke@bc.edu' # for testing purposes
+        send_html_email(subject, recipients, message)
         return reverse('offers:offer-list')
     
     def test_func(self):
@@ -167,14 +180,17 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
     
 
-def send_email(subject, message):
+def send_html_email(subject, recipients, message):
+    to = [recipients]
+    from_email = 'tasystem2023@gmail.com'
 
-    subject = subject
-    message = message
-    email_from = 'tasystem2023@gmail.com'
-    recipient_list = ['kohke@bc.edu']
+    context = {'messages': message}
 
-    send_mail(subject, message, email_from, recipient_list)
+    html_content = render_to_string('email.html', context)
+    text_content = strip_tags(html_content)  # This strips the html, so people will have the text as well.
 
-    
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
 
