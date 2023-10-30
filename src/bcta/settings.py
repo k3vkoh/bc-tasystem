@@ -65,7 +65,6 @@ MIDDLEWARE = [
 
     # oauth
     'allauth.account.middleware.AccountMiddleware',
-
 ]
 
 ROOT_URLCONF = "bcta.urls"

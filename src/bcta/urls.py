@@ -5,6 +5,9 @@ urlpatterns = [
     path("", include("main.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
+    # path('accounts/google/login/',
+    #  include('allauth.socialaccount.providers.google.urls')),
+
     path("users/", include("users.urls")),
     path("courses/", include("courses.urls")),
     path("applications/", include("applications.urls"), name="applications"),

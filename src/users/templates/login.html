@@ -6,5 +6,6 @@
 
 <h2 class="fw-normal mb-4">Login</h2>
 <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-outline-primary">Login with Google</a>
+<a href="{% url 'google_login' %}">Login with Google</a>
 
 {% endblock %}
