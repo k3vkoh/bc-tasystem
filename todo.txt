@@ -1,8 +1,51 @@
-TODO:
-- Test system further to see if there are any bugs or situations where students/professors can do things that they are not supposed to
+TODO
 
-For our meeting:
-- We need talk about how to properly nest discussions and labs under their respective courses. 
-- Currently, students are required to submit separate applications for course sections that are essentially the same class. To illustrate, "Computer Science (01)" and "Computer Science (02)" — both instructed by Mira Yun — are treated as distinct classes. This forces students to apply twice for what is essentially the same course.
-- Additionally, we need clarity on how to associate discussions and labs with their main lectures. Right now, discussions and labs are treated as standalone courses. The CSV format provided by Professor Samary does not offer a way to link them to a parent lecture. Should we determine these links arbitrarily, perhaps using a round-robin algorithm based on the professor and class? Or is there a specific criteria we should adhere to?
+1. Need to update course upload to work with new google sign-on instead of regular accounts now
+    - Problem: With the introduction of Google sign-on, professors will not have pre-existing accounts at the time of course upload, 
+    - Solution: We can keep it how it is right now because google sign-on first checks if there is an email already existing in the DB and if there is then it will login to that user account. That means we need to make sure that the professor accounts that we create during the course upload are 100% correct. Otherwise, the professors will not have access to courses and their account status will be set to student by default.
 
+2. Since we removed the old login functionality and only have google sign on, admins have no way of logging in.
+
+
+
+OAUTH Setup: 
+
+I removed a lot of the users functionality since we're only allowing users to signup and login through Google sign-on now.
+
+Setup:
+
+pip install -r requirements.txt
+Delete DB and then run python manage.py makemigrations and python manage.py migrate --run-syncdb
+Create a superuser
+Go here: https://console.cloud.google.com/apis/dashboard, and create a project
+Get the Client ID, and Secret Key
+Go to crendentials > create credential > Create OAuth client ID > Web app
+Add http://127.0.0.1:8000/accounts/google/login/callback/ and http://127.0.0.1:8000/ to authorized redirect URIs
+Save
+Go to admin panel
+Go to social application > create social application
+select Google as the provider and put the client id and secret that u got from the project creation
+Add http://127.0.0.1:8000/ to the chosen sites at the bottom
+Then try to login
+
+
+About OAUTH: 
+
+When you use `django-allauth` with OAuth providers like Google, the process of account creation and data storage is as follows:
+
+1. **OAuth Authentication**: When a user clicks on "Login with Google", they are redirected to Google's OAuth page. After granting permission, Google sends back an access token to your application.
+
+2. **Data Retrieval**: `django-allauth` uses this access token to retrieve user data from Google. This typically includes information like email, first name, last name, and profile picture, among other things, depending on the scopes you've requested.
+
+3. **Account Creation**:
+   - `django-allauth` checks if a user with the retrieved email already exists in your database.
+   - If the user exists, they are simply logged in.
+   - If the user doesn't exist, `django-allauth` creates a new user. In your case, it will use the `CustomUserManager`'s `create_user` method. The email is set from the data retrieved from Google. If the first name and last name are provided by Google, they will be set as well. Other fields in your `CustomUser` model like `eagleid` and `professor` will be set to their default values (as you've defined in the model).
+
+4. **Social Account Creation**: Alongside creating a `CustomUser`, `django-allauth` also creates a `SocialAccount` instance. This model is provided by `django-allauth` and stores the relationship between your user and their Google account. It saves data like the UID (unique ID provided by Google for the user), the access token, and any extra data retrieved from Google that isn't directly saved on your user model.
+
+5. **Login**: After the account creation (or finding an existing account), the user is logged in.
+
+To see the exact data that Google sends back, you can inspect the `extra_data` field on the `SocialAccount` model for a user. This will give you a dictionary of the data that Google provided.
+
+If you want to customize the data that's saved when a new user is created via Google login, you can override the `populate_user` method in a custom adapter for `allauth`. This allows you to set custom fields or modify the data before the user instance is saved.

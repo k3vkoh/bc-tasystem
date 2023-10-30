@@ -7,6 +7,10 @@ from users.models import CustomUser as User
 from random import randint
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
+from users.instructor_data import instructors
+from allauth.account.models import EmailAddress
+
+from random import randint
 
 
 class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -27,26 +31,45 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         for row in sheet.iter_rows(values_only=True):
             if not row[0] or row[0] == 'Term':
                 continue
-            instructor = self.get_or_create_instructor_from_row(row)
+            instructor = self.get_or_create_instructor(row)
             self.create_course(row, instructor)
 
-    def get_or_create_instructor_from_row(self, row):
+    def get_email(self, first_name, last_name):
+        return f'{last_name}@bc.edu' if f'{last_name}, {first_name}' not in instructors else instructors[f'{last_name}, {first_name}']['Short Email']
+
+    def get_or_create_instructor(self, row):
         instructor_first_name = row[6].split(',')[1].strip()
         instructor_last_name = row[6].split(',')[0].strip()
+
+        email = self.get_email(instructor_first_name, instructor_last_name)
+
+        # FOR TESTING PURPOSES ONLY
+        if randint(0, 5) == 1:
+            instructor_first_name = 'Andy'
+            instructor_last_name = 'Deng'
+            email = 'denga@bc.edu'
 
         instructor, created = User.objects.get_or_create(
             first_name=instructor_first_name,
             last_name=instructor_last_name,
             defaults={
                 'professor': True,
-                # TODO: Change this to a valid email
-                'email': f"{instructor_last_name.lower()[:4]}@bc.    edu",
+                'email': email,
                 'eagleid': self.generate_eagleid()
             }
         )
+
         if created:
             instructor.set_password('password')
             instructor.save()
+            # needed for allauth because allauth uses emailaddress to store and associate emails with users
+            EmailAddress.objects.create(
+                user=instructor,
+                email=email,
+                verified=True,
+                primary=True
+            )
+
         return instructor
 
     def create_course(self, row, instructor):
@@ -87,6 +110,7 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
 class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
     def post(self, request):
         self.archive_courses()
+        messages.success(self.request, 'Successfully Closed Courses')
         return redirect('courses:manage-course')
 
     def archive_courses(self):
@@ -112,6 +136,7 @@ class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
             archived_course.past_tas.set(course.current_tas.all())
 
         Course.objects.all().delete()
+        User.objects.filter(is_superuser=False).delete()
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser

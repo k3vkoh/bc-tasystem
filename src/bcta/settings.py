@@ -65,7 +65,6 @@ MIDDLEWARE = [
 
     # oauth
     'allauth.account.middleware.AccountMiddleware',
-
 ]
 
 ROOT_URLCONF = "bcta.urls"
@@ -146,7 +145,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# LOGIN_URL = '/users/login'
+LOGIN_URL = '/users/login'
 
 STATIC_URL = '/static/'
 
@@ -163,7 +162,7 @@ EMAIL_HOST_USER = 'tasystem2023@gmail.com'
 EMAIL_HOST_PASSWORD = 'eymwzvyzsrajryjo'
 
 # OAUTH
-SITE_ID = 2
+SITE_ID = 3
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -180,7 +179,9 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
-        }
+        },
+        'METHOD': 'oauth2',
+        'VERIFIED_EMAIL': True,
     }
 }
 
@@ -189,3 +190,5 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
+
+SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
