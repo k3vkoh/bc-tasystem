@@ -8,7 +8,7 @@ from random import randint
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from users.instructor_data import instructors
-
+from allauth.account.models import EmailAddress
 from random import randint
 
 
@@ -44,8 +44,8 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         # FOR TESTING PURPOSES ONLY
         if randint(0, 5) == 1:
-            instructor_first_name = 'Test'
-            instructor_last_name = 'Instructor'
+            instructor_first_name = 'Andy'
+            instructor_last_name = 'Deng'
             email = 'denga@bc.edu'
 
         instructor, created = User.objects.get_or_create(
@@ -58,11 +58,18 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             }
         )
 
-        if created:
-            instructor.set_password('password')
-            instructor.save()
+        if not created:
+            return instructor
 
-        return instructor
+        instructor.set_password('password')
+        instructor.save()
+        # needed for allauth because allauth uses emailaddress to store and associate emails with users
+        EmailAddress.objects.create(
+            user=instructor,
+            email=email,
+            verified=True,
+            primary=True
+        )
 
     def create_course(self, row, instructor):
         excluded_lectures = ["Computer Science I",
