@@ -9,6 +9,8 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from users.instructor_data import instructors
 
+from random import randint
+
 
 class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request):
@@ -32,18 +34,26 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             self.create_course(row, instructor)
 
     def get_email(self, first_name, last_name):
-        return f'{last_name}@bc.edu' if f'{last_name}, {first_name}' not in instructors else instructors[f'{last_name}, {first_name}']['Full Email']
+        return f'{last_name}@bc.edu' if f'{last_name}, {first_name}' not in instructors else instructors[f'{last_name}, {first_name}']['Short Email']
 
     def get_or_create_instructor(self, row):
         instructor_first_name = row[6].split(',')[1].strip()
         instructor_last_name = row[6].split(',')[0].strip()
+
+        email = self.get_email(instructor_first_name, instructor_last_name)
+
+        # FOR TESTING PURPOSES ONLY
+        if randint(0, 5) == 1:
+            instructor_first_name = 'Test'
+            instructor_last_name = 'Instructor'
+            email = 'denga@bc.edu'
 
         instructor, created = User.objects.get_or_create(
             first_name=instructor_first_name,
             last_name=instructor_last_name,
             defaults={
                 'professor': True,
-                'email': self.get_email(instructor_first_name, instructor_last_name),
+                'email': email,
                 'eagleid': self.generate_eagleid()
             }
         )
@@ -118,6 +128,7 @@ class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
             archived_course.past_tas.set(course.current_tas.all())
 
         Course.objects.all().delete()
+        User.objects.filter(is_superuser=False).delete()
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser
