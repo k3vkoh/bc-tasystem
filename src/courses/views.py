@@ -9,6 +9,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from users.instructor_data import instructors
 from allauth.account.models import EmailAddress
+
 from random import randint
 
 
@@ -58,18 +59,18 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             }
         )
 
-        if not created:
-            return instructor
+        if created:
+            instructor.set_password('password')
+            instructor.save()
+            # needed for allauth because allauth uses emailaddress to store and associate emails with users
+            EmailAddress.objects.create(
+                user=instructor,
+                email=email,
+                verified=True,
+                primary=True
+            )
 
-        instructor.set_password('password')
-        instructor.save()
-        # needed for allauth because allauth uses emailaddress to store and associate emails with users
-        EmailAddress.objects.create(
-            user=instructor,
-            email=email,
-            verified=True,
-            primary=True
-        )
+        return instructor
 
     def create_course(self, row, instructor):
         excluded_lectures = ["Computer Science I",
