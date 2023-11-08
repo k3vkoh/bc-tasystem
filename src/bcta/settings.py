@@ -46,12 +46,7 @@ INSTALLED_APPS = [
     "courses",
     "applications",
     "offers",
-
-    # oauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    "django_gauth",
 ]
 
 MIDDLEWARE = [
@@ -62,9 +57,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
-    # oauth
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "bcta.urls"
@@ -167,28 +159,6 @@ SITE_ID = 3
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'django_gauth.backends.GoogleAuthBackend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'METHOD': 'oauth2',
-        'VERIFIED_EMAIL': True,
-    }
-}
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-
-SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'

@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
-{% load socialaccount %}
-
 {% block content %}
 
 <h2 class="fw-normal mb-4">Login</h2>
-<a href="{% provider_login_url 'google' %}?next=/" class="btn btn-outline-primary">Login with Google</a>
-<a href="{% url 'google_login' %}">Login with Google</a>
+
+<a href="{% url 'django_gauth:login' %}" id="google-signin-button">
+    <img src="https://developers.google.com/identity/images/g-logo.png"  alt="Google Icon">
+    <span class="text">Sign in with Google</span>
+</a>
 
 {% endblock %}
