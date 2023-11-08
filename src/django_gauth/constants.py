@@ -1,5 +1,8 @@
-GOOGLE_CLIENT_ID = "877517324643-lrrfus5tm014p1bmu4ira6vf9v8u7fr7.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "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"
+from bcta import settings
+
+GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET = settings.GOOGLE_CLIENT_SECRET
+
 BASE_URI = 'http://127.0.0.1:8000'
 
 GOOGLE_REDIRECT_URI = f"{BASE_URI}/oauth/google/callback"
