@@ -45,11 +45,15 @@ class GoogleAuthBackend(BaseBackend):
                 google_user_details = requests.get(
                     f'https://www.googleapis.com/oauth2/v2/userinfo?access_token={access_token}')
                 email = google_user_details.json().get('email')
+                first_name = google_user_details.json().get('given_name')
+                last_name = google_user_details.json().get('family_name')
                 user = UserModel.objects.filter(email=email).first()
                 if not user:
                     user = UserModel.objects.create_user(
                         email=email,
                         password=None,
                         professor=False,
+                        first_name=first_name,
+                        last_name=last_name,
                     )
                 return user
