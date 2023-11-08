@@ -9,6 +9,6 @@ GOOGLE_LOGIN_REDIRECT_URI = (f"https://accounts.google.com/o/oauth2/v2/auth?"
                              f"&scope={GOOGLE_SCOPES}"
                              f"&access_type={'offline'}"
                              f"&include_grant_scopes={'true'}"
-                             #  f"&state={ "state" }"
+                             #  f"&state={ <SESSION STATE> }"
                              f"&client_id={GOOGLE_CLIENT_ID}"
                              f"&redirect_uri={GOOGLE_REDIRECT_URI}")
