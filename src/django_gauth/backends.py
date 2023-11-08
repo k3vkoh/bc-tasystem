@@ -28,12 +28,9 @@ class GoogleAuthBackend(BaseBackend):
 
     def get_user(self, pk):
         """Returns a user instance """
-        print("THIS RUNS", pk)
         try:
-            print("USER: ", UserModel.objects.get(pk=pk))
             return UserModel.objects.get(pk=pk)
         except UserModel.DoesNotExist:
-            print("USER: ", None)
             return None
 
     def authenticate(self, request, code=None, **kwargs):
