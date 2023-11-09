@@ -1,17 +1,10 @@
-from django.forms.forms import BaseForm
-from django.http.response import HttpResponse
-from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from applications.models import Application
-from courses.models import Course
 from .models import Offer
 from django.urls import reverse
 from django.contrib import messages
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 
 
 class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -44,14 +37,12 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
 
     def get_success_url(self):
-        # email for the student after an offer is sent
         url = reverse('offers:offer-accept',
                       args=[self.get_object().course.id])
         subject = f'TA Application Update For {self.get_object().student}'
         message = [f'Dear {self.get_object().student}',
                    f'Congratulations! You have received an offer for {self.get_object().course}', f'Access the offer here: {url}']
-        # recipients = self.get_object().student.email # for production
-        recipients = 'kohke@bc.edu'  # for testing purposes
+        recipients = self.get_object().student.email
         send_html_email(subject, recipients, message)
         return reverse("offers:offer-list")
 
@@ -125,14 +116,12 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return context
 
     def get_success_url(self):
-        # email for the professor after the student accepts the offer
         url = reverse('courses:course-detail',
                       args=[self.get_object().course.id])
         subject = f'TA Offer Update For {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}'
         message = [f'Dear {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}',
                    f'The student has accepted your offer. You can just the status of {self.get_object().course} here: {url}']
-        # recipients = self.get_object().course.professor.email # for production
-        recipients = 'kohke@bc.edu'  # for testing purposes
+        recipients = self.get_object().course.professor.email  # for production
         send_html_email(subject, recipients, message)
         return reverse('offers:offer-list')
 
@@ -143,7 +132,6 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
             return "You are already a TA for a course"
         if course.current_tas.count() >= course.num_tas:
             return "This course already has the maximum number of TAs"
-        return None
 
 
 class OfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -170,14 +158,12 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
         return super().form_valid(form)
 
     def get_success_url(self):
-        # email for the professor after the student declines the offer
         url = reverse('courses:course-detail',
                       args=[self.get_object().course.id])
         subject = f'TA Offer Update For {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}'
         message = [f'Dear {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}',
                    f'The student has declined your offer. You can just the status of {self.get_object().course} here: {url}']
-        # recipients = self.get_object().course.professor.email # for production
-        recipients = 'kohke@bc.edu'  # for testing purposes
+        recipients = self.get_object().course.professor.email
         send_html_email(subject, recipients, message)
         return reverse('offers:offer-list')
 
@@ -191,15 +177,16 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
 
 
 def send_html_email(subject, recipients, message):
-    to = [recipients]
-    from_email = 'tasystem2023@gmail.com'
+    pass
+    # to = [recipients]
+    # from_email = 'tasystem2023@gmail.com'
 
-    context = {'messages': message}
+    # context = {'messages': message}
 
-    html_content = render_to_string('email.html', context)
-    # This strips the html, so people will have the text as well.
-    text_content = strip_tags(html_content)
+    # html_content = render_to_string('email.html', context)
+    # # This strips the html, so people will have the text as well.
+    # text_content = strip_tags(html_content)
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    # msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    # msg.attach_alternative(html_content, "text/html")
+    # msg.send()

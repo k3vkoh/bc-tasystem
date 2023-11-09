@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from allauth.account.models import EmailAddress
 import uuid
 
 
@@ -12,10 +11,6 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
-        EmailAddress.objects.create(
-            user=user, email=email, primary=True, verified=True)
-        print('Created user with email: ' + email)
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):

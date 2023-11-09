@@ -158,15 +158,29 @@ class ApplicationRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
 
 
 def send_html_email(subject, recipients, message):
-    to = [recipients]
-    from_email = 'tasystem2023@gmail.com'
+    # to = [recipients]
+    # from_email = 'tasystem2023@gmail.com'
 
-    context = {'messages': message}
+    # context = {'messages': message}
 
-    html_content = render_to_string('email.html', context)
-    # This strips the html, so people will have the text as well.
-    text_content = strip_tags(html_content)
+    # html_content = render_to_string('email.html', context)
+    # # This strips the html, so people will have the text as well.
+    # text_content = strip_tags(html_content)
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    # msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    # msg.attach_alternative(html_content, "text/html")
+    # msg.send()
+
+    # to = [recipients]
+    # from_email = 'tasystem2023@gmail.com'
+
+    # context = {'messages': message}
+
+    # html_content = render_to_string('email.html', context)
+    # # This strips the html, so people will have the text as well.
+    # text_content = strip_tags(html_content)
+
+    # msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+    # msg.attach_alternative(html_content, "text/html")
+    # msg.send()
+    pass

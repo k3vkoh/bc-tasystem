@@ -6,7 +6,7 @@ from .models import CustomUser
 class CustomUserUpdateForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'eagleid']
+        fields = ['eagleid']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

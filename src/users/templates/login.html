@@ -1,11 +1,42 @@
 {% extends "base.html" %}
 
-{% load socialaccount %}
-
 {% block content %}
 
+<style>
+	#google-signin-button {
+		align-items: center;
+		background-color: #fff;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		padding: 10px 20px;
+		text-decoration: none;
+		color: #333;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	#google-signin-button:hover {
+		background-color: #f0f0f0;
+	}
+
+
+	 #google-signin-button > img{
+		margin-right: 10px;
+		height: 1.5rem;
+	}
+
+	.text {
+		font-weight: bold;
+	}
+</style>
+
+
+
 <h2 class="fw-normal mb-4">Login</h2>
-<a href="{% provider_login_url 'google' %}?next=/" class="btn btn-outline-primary">Login with Google</a>
-<a href="{% url 'google_login' %}">Login with Google</a>
+
+<a href="{% url 'django_gauth:login' %}" id="google-signin-button">
+    <img src="https://developers.google.com/identity/images/g-logo.png"  alt="Google Icon">
+    <span class="text">Sign in with Google</span>
+</a>
 
 {% endblock %}
