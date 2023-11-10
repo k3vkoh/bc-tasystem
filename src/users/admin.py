@@ -5,14 +5,6 @@ from courses.models import Course
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
 
-# This class defines the inline behavior for Course objects related to CustomUser
-
-
-class CourseInline(admin.TabularInline):
-    model = Course
-    fk_name = 'professor'  # the name of the ForeignKey field in Course to CustomUser
-    extra = 1  # how many rows to show by default
-
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -33,7 +25,6 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
-    inlines = [CourseInline,]  # Add the inline class here
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
