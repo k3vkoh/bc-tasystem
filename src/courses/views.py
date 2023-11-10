@@ -71,6 +71,11 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         if row[5] in excluded_lectures and row[1] == "Lecture":
             return
 
+        num_tas = 1 if row[1] == "Discussion" or row[1] == "Lab" else int(
+            row[9]) // 20
+
+        num_tas = 1 if num_tas == 0 else num_tas
+
         new_class = Course.objects.create(
             term=row[0],
             class_type=row[1],
@@ -83,7 +88,7 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             timeslot=row[8],
             max_enroll=row[9],
             room_size=row[10],
-            num_tas=int(row[9]) // 20,
+            num_tas=num_tas,
             description=row[12],
             professor=instructor
         )
