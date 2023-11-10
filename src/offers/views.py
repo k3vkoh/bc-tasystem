@@ -41,7 +41,7 @@ class OfferCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
                       args=[self.get_object().course.id])
         subject = f'TA Application Update For {self.get_object().student}'
         message = [f'Dear {self.get_object().student}',
-                   f'Congratulations! You have received an offer for {self.get_object().course}', f'Access the offer here: {url}']
+                   f'Congratulations! You have received an offer for {self.get_object().course}', f'Access the offer here: https://cscita.bc.edu{url}']
         recipients = self.get_object().student.email
         send_html_email(subject, recipients, message)
         return reverse("offers:offer-list")
@@ -120,7 +120,7 @@ class OfferAcceptView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
                       args=[self.get_object().course.id])
         subject = f'TA Offer Update For {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}'
         message = [f'Dear {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}',
-                   f'The student has accepted your offer. You can just the status of {self.get_object().course} here: {url}']
+                   f'The student has accepted your offer. You can just the status of {self.get_object().course} here: https://cscita.bc.edu{url}']
         recipients = self.get_object().course.professor.email  # for production
         send_html_email(subject, recipients, message)
         return reverse('offers:offer-list')
@@ -162,7 +162,7 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
                       args=[self.get_object().course.id])
         subject = f'TA Offer Update For {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}'
         message = [f'Dear {self.get_object().course.instructor_first_name} {self.get_object().course.instructor_last_name}',
-                   f'The student has declined your offer. You can just the status of {self.get_object().course} here: {url}']
+                   f'The student has declined your offer. You can just the status of {self.get_object().course} here: https://cscita.bc.edu{url}']
         recipients = self.get_object().course.professor.email
         send_html_email(subject, recipients, message)
         return reverse('offers:offer-list')
@@ -177,7 +177,6 @@ class OfferRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMix
 
 
 def send_html_email(subject, recipients, message):
-    pass
     # to = [recipients]
     # from_email = 'tasystem2023@gmail.com'
 
@@ -190,3 +189,4 @@ def send_html_email(subject, recipients, message):
     # msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     # msg.attach_alternative(html_content, "text/html")
     # msg.send()
+    pass
