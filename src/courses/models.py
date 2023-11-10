@@ -23,12 +23,10 @@ class Course(models.Model):
     status = models.BooleanField(default=True)
 
     professor = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, default=None)
-    current_tas = models.ManyToManyField(
-        CustomUser, related_name='current_tas', blank=True)
+        CustomUser, on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
 
-    applications = models.ManyToManyField(
-        "applications.Application", blank=True, related_name='applications')
+    current_tas = models.ManyToManyField(
+        CustomUser, related_name='course_working_for', blank=True)
 
     has_discussions = models.BooleanField(default=False)
 

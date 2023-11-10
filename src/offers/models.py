@@ -11,6 +11,7 @@ class OfferStatus(Enum):
 
 class Offer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     application = models.ForeignKey(
         'applications.Application', on_delete=models.CASCADE, related_name='offer_application')
     course = models.ForeignKey(
@@ -37,7 +38,7 @@ class Offer(models.Model):
         if self.course.current_tas.count() >= self.course.num_tas:
             self.course.status = False
         self.course.save()
-        self.recipient.course_working_for = self.course
+        self.recipient.course_working_for.set([self.course])
         self.recipient.save()
         self.save()
 

@@ -22,10 +22,15 @@ class ApplicationStatus(Enum):
 
 class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    student = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, default=None)
+
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, default=None, related_name='applications')
+
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, default=None, related_name='applications')
 
     additional_information = models.TextField(max_length=500, blank=True)
+
     status = models.IntegerField(choices=[(
         tag.value, tag.name) for tag in ApplicationStatus], default=ApplicationStatus.PENDING.value)
 

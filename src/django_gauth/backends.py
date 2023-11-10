@@ -23,7 +23,6 @@ class GoogleAuthBackend(BaseBackend):
             "redirect_uri": constants.GOOGLE_REDIRECT_URI,
             "grant_type": "authorization_code"
         })
-        print("Access: ", response.json().get('access_token'))
         return response.json().get('access_token')
 
     def get_user(self, pk):

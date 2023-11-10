@@ -2,14 +2,17 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-   
     <div class="container mt-4">
     <div class="jumbotron">
         <h1 class="display-6">Welcome, {{ user }}!</h1>
         <hr class="my-4">
         <p class="lead">Summary:</p>
         {% if user.is_student %}
-            <p class="lead">You are currently a TA for: {{ user.course_working_for }}</p>
+            {% if user.course_working_for.exists %}
+                <p class="lead">You are currently a TA for: {{ user.course_working_for.first }}</p>
+            {% else %}
+                <p class="lead">You are not currently a TA for any courses.</p>
+            {% endif %}
         {% elif user.is_professor %}
             <ul class="list-group">
                 {% for course in user.courses.all %}

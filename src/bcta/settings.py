@@ -91,9 +91,18 @@ WSGI_APPLICATION = "bcta.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'bcta_db',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'postgres',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5433',
+    # }
+    'default': {
+        # sqlite3
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -162,8 +171,6 @@ EMAIL_HOST_PASSWORD = 'eymwzvyzsrajryjo'
 
 # OAUTH
 SITE_ID = 3
-
-SOCIALACCOUNT_LOGIN_ON_GET = True
 
 AUTHENTICATION_BACKENDS = [
     'django_gauth.backends.GoogleAuthBackend',
