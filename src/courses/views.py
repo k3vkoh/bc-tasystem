@@ -136,12 +136,12 @@ class ListView(LoginRequiredMixin, ListView):
         professor_id = self.request.GET.get('professor_id', None)
 
         if professor_id:
-            return Course.objects.filter(professor__id=professor_id)
+            return Course.objects.filter(professor__id=professor_id, is_active=True)
 
         if user.is_student() or user.is_superuser:
-            return Course.objects.all()
+            return Course.objects.filter(is_active=True)
 
-        return Course.objects.filter(professor=user)
+        return Course.objects.filter(professor=user,is_active=True)
 
 
 class CourseDetailView(LoginRequiredMixin, DetailView):

@@ -21,7 +21,6 @@
 {% endif %}
 
 {% for course in course_data %}
-  {% if course.is_active %}
   <div class="course-item list-group-item mb-3 p-4 border rounded">
     <div class="d-flex justify-content-between align-items-center">
         <h4 class="mb-0"><a href="{% url 'courses:course-detail' course.id %}">{{ course.course }} - {{ course }}</a></h4>
@@ -63,7 +62,6 @@
     </div>
     {% endif %}
   </div>
-  {% endif %}
 
 {% endfor %}
 
