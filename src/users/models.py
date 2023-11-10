@@ -46,7 +46,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return not self.professor
 
     def reached_max_applications(self):
-        return self.applications.count() >= 5
+        lecture_application_count = self.applications.filter(
+            course__class_type='Lecture').count()
+
+        non_lecture_applications = self.applications.exclude(
+            course__class_type='Lecture')
+        non_lecture_class_names = non_lecture_applications.values_list(
+            'course__course', flat=True)
+        non_lecture_count = len(set(non_lecture_class_names))
+
+        total_applications = lecture_application_count + non_lecture_count
+
+        return total_applications >= 5
 
     def already_applied_to_course(self, course):
         return self.applications.filter(course=course).exists()
