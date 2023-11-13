@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render, redirect
-from .models import Course, ArchivedCourse
+from .models import Course
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from openpyxl import load_workbook
 from users.models import CustomUser as User
@@ -113,27 +113,8 @@ class CloseView(LoginRequiredMixin, UserPassesTestMixin, View):
     def archive_courses(self):
         current_courses = Course.objects.all()
         for course in current_courses:
-            archived_course = ArchivedCourse.objects.create(
-                term=course.term,
-                class_type=course.class_type,
-                course=course.course,
-                section=course.section,
-                course_title=course.course_title,
-                instructor_first_name=course.instructor_first_name,
-                instructor_last_name=course.instructor_last_name,
-                room_name=course.room_name,
-                timeslot=course.timeslot,
-                max_enroll=course.max_enroll,
-                room_size=course.room_size,
-                num_tas=course.num_tas,
-                description=course.description,
-                professor=course.professor,
-            )
-
-            archived_course.past_tas.set(course.current_tas.all())
-
-        Course.objects.all().delete()
-        User.objects.filter(is_superuser=False).delete()
+            course.is_active = False
+            course.save()
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_superuser
@@ -155,12 +136,12 @@ class ListView(LoginRequiredMixin, ListView):
         professor_id = self.request.GET.get('professor_id', None)
 
         if professor_id:
-            return Course.objects.filter(professor__id=professor_id)
+            return Course.objects.filter(professor__id=professor_id, is_active=True)
 
         if user.is_student() or user.is_superuser:
-            return Course.objects.all()
+            return Course.objects.filter(is_active=True)
 
-        return Course.objects.filter(professor=user)
+        return Course.objects.filter(professor=user,is_active=True)
 
 
 class CourseDetailView(LoginRequiredMixin, DetailView):

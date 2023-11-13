@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from offers.views import send_html_email
 
 
 class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -48,7 +49,7 @@ class ApplicationCreateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         url = reverse('courses:course-detail', args=[self.get_object().id])
         subject = f'TA Offer Update For {self.get_object().instructor_first_name} {self.get_object().instructor_last_name}'
         message = [f'Dear {self.get_object().instructor_first_name} {self.get_object().instructor_last_name}',
-                   f'The student submitted an application for {self.get_object().course_title}. View the application here: {url}']
+                   f'The student submitted an application for {self.get_object().course_title}. View the application here: https://cscita.bc.edu{url}']
         # recipients = self.get_object().professor.email # for production
         recipients = 'kohke@bc.edu'  # for testing purposes
         send_html_email(subject, recipients, message)
@@ -139,7 +140,7 @@ class ApplicationRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         url = reverse('courses:course-list')
         subject = f'TA Application Update For {self.get_object().student.first_name} {self.get_object().student.last_name}'
         message = [f'Dear {self.get_object().student.first_name} {self.get_object().student.last_name}',
-                   f'We regret to inform you that your application has been rejected. You can view other courses here: {url}']
+                   f'We regret to inform you that your application has been rejected. You can view other courses here: https://cscita.bc.edu{url}']
         # recipients = self.get_object().student.email # for production
         recipients = 'kohke@bc.edu'  # for testing purposes
         send_html_email(subject, recipients, message)
@@ -155,32 +156,3 @@ class ApplicationRejectView(SuccessMessageMixin, LoginRequiredMixin, UserPassesT
         context = super().get_context_data(**kwargs)
         context['course'] = self.get_object().course
         return context
-
-
-def send_html_email(subject, recipients, message):
-    # to = [recipients]
-    # from_email = 'tasystem2023@gmail.com'
-
-    # context = {'messages': message}
-
-    # html_content = render_to_string('email.html', context)
-    # # This strips the html, so people will have the text as well.
-    # text_content = strip_tags(html_content)
-
-    # msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    # msg.attach_alternative(html_content, "text/html")
-    # msg.send()
-
-    # to = [recipients]
-    # from_email = 'tasystem2023@gmail.com'
-
-    # context = {'messages': message}
-
-    # html_content = render_to_string('email.html', context)
-    # # This strips the html, so people will have the text as well.
-    # text_content = strip_tags(html_content)
-
-    # msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    # msg.attach_alternative(html_content, "text/html")
-    # msg.send()
-    pass
