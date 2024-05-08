@@ -1,9 +1,14 @@
 import os
+import socket
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 
-BASE_URI = 'http://127.0.0.1:8000'
+if socket.gethostname() == 'cscita':
+
+    BASE_URI = "https://{serverName}".format(serverName=os.getenv("SITE_HOSTNAME","127.0.0.1:8000"))
+else:
+    BASE_URI = 'http://127.0.0.1:8000'
 
 GOOGLE_REDIRECT_URI = f"{BASE_URI}/oauth/google/callback"
 
