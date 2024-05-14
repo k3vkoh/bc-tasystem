@@ -37,8 +37,12 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
         return f'{last_name}@bc.edu' if f'{last_name}, {first_name}' not in instructors else instructors[f'{last_name}, {first_name}']['Short Email']
 
     def get_or_create_instructor(self, row):
-        instructor_first_name = row[6].split(',')[1].strip()
-        instructor_last_name = row[6].split(',')[0].strip()
+        try:
+            instructor_first_name = row[6].split(',')[1].strip()
+            instructor_last_name = row[6].split(',')[0].strip()
+        except:
+            instructor_first_name = row[6]
+            instructor_last_name = ""
 
         email = self.get_email(instructor_first_name, instructor_last_name)
 
