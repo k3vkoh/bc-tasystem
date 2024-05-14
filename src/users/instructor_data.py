@@ -27,6 +27,12 @@ instructors = {
         "Full Email": "alexander.creiner@bc.edu",
         "Short Email": "creiner@bc.edu"
     },
+
+    "Diouane, Youness": {
+        "Full Email": "diouane.youness@bc.edu",
+        "Short Email": "diouane@bc.edu"
+    },
+
     "Griffith, William": {
         "Full Email": "william.griffith@bc.edu",
         "Short Email": "griff@bc.edu"
@@ -35,6 +41,11 @@ instructors = {
         "Full Email": "nikhil.gupta.3@bc.edu",
         "Short Email": "guptanq@bc.edu"
     },
+    "Hurley, Debora": {
+        "Full Email": "debora.hurley@bc.edu",
+        "Short Email":"hurleydh@bc.edu"
+    },
+
     "Nam, Kim Wook": {
         "Full Email": "nam.wook.kim@bc.edu",
         "Short Email": "kimry@bc.edu"
@@ -82,5 +93,9 @@ instructors = {
     "Yun, Mira": {
         "Full Email": "mira.yun@bc.edu",
         "Short Email": "yunmd@bc.edu"
+    },
+        "Yuan, Yuan": {
+        "Full Email": "yuan.yuan@bc.edu",
+        "Short Email": "yuanyua@bc.edu"
     }
 }
