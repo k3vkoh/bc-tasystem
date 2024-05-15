@@ -34,7 +34,7 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
             self.create_course(row, instructor)
 
     def get_email(self, first_name, last_name):
-        return f'{last_name}@bc.edu' if f'{last_name}, {first_name}' not in instructors else instructors[f'{last_name}, {first_name}']['Short Email']
+        return f'{first_name}.{last_name}@bc.edu' if f'{last_name}, {first_name}' not in instructors else instructors[f'{last_name}, {first_name}']['Short Email']
 
     def get_or_create_instructor(self, row):
         try:
@@ -46,11 +46,6 @@ class UploadView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         email = self.get_email(instructor_first_name, instructor_last_name)
 
-        # FOR TESTING PURPOSES ONLY
-        if randint(0, 5) == 1:
-            instructor_first_name = 'Andy'
-            instructor_last_name = 'Deng'
-            email = 'denga@bc.edu'
 
         instructor, created = User.objects.get_or_create(
             first_name=instructor_first_name,
